@@ -1,5 +1,6 @@
 export * from './AppSettings'
 export * from './Attachment'
+export * from './BaseEntity'
 export * from './Device'
 export * from './Document'
 export * from './Folder'
