@@ -1,4 +1,5 @@
+import { EventMetadata } from './EventMetadata'
+
 export interface IEvent {
-    readonly id: string
-    readonly occuredAt: Date
+    readonly metadata: EventMetadata
 }

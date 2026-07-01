@@ -1,11 +1,10 @@
+import { EventMetadata } from './EventMetadata'
 import { IEvent } from './IEvent'
 
 export abstract class DomainEvent implements IEvent {
-    readonly id: string
-    readonly occuredAt: Date
+    public readonly metadata: EventMetadata
 
-    protected constructor(id: string, occuredAt: Date) {
-        this.id = id
-        this.occuredAt = occuredAt
+    protected constructor(metadata: EventMetadata) {
+        this.metadata = metadata
     }
 }
