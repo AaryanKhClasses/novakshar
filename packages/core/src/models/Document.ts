@@ -62,9 +62,9 @@ export class Document extends BaseEntity {
         this.touch(now)
     }
 
-    public markAsFavorite(favorite: boolean, now: Date): void {
-        if(favorite === this._favorite) return
-        this._favorite = favorite
+    public markAsFavorite(now: Date): void {
+        if(this._favorite) return
+        this._favorite = true
         this.touch(now)
     }
 

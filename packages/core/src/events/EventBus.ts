@@ -1,9 +1,8 @@
+import { IEventBus, EventConstructor } from '../contracts'
 import { EventHandler } from './EventHandler'
 import { IEvent } from './IEvent'
 
-export type EventConstructor<T extends IEvent> = new (...args: any[]) => T
-
-export class EventBus {
+export class EventBus implements IEventBus {
     private readonly handlers = new Map<EventConstructor<IEvent>, EventHandler<IEvent>[]>()
 
     public subscribe<T extends IEvent>(event: EventConstructor<T>, handler: EventHandler<T>): void {
