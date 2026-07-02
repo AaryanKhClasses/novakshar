@@ -1,12 +1,3 @@
-CREATE TABLE IF NOT EXISTS workspaces(
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    root_path TEXT NOT NULL,
-    version INTEGER NOT NULL,
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS folders(
     id TEXT PRIMARY KEY,
     parent_id TEXT NULL,
