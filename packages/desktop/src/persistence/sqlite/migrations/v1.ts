@@ -1,3 +1,4 @@
+export const V1 = `
 CREATE TABLE IF NOT EXISTS folders(
     id TEXT PRIMARY KEY,
     parent_id TEXT NULL,
@@ -59,3 +60,4 @@ CREATE TABLE IF NOT EXISTS devices(
 CREATE INDEX IF NOT EXISTS idx_documents_folder ON documents(folder_id);
 CREATE INDEX IF NOT EXISTS idx_attachments_document ON attachments(document_id);
 CREATE INDEX IF NOT EXISTS idx_revisions_document ON revisions(document_id);
+`

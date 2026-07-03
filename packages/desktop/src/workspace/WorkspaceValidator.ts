@@ -22,7 +22,7 @@ export class WorkspaceValidator {
         }
 
         const requiredFiles = [
-            Constants.WorkspaceFile, Constants.DatabaseFile, Constants.SettingsFile, Constants.SyncFile
+            Constants.WorkspaceFile, Constants.SettingsFile, Constants.SyncFile
         ]
         for(const file of requiredFiles) {
             const exists = await this.fileSystem.exists(path.join(metadataPath, file))

@@ -1,13 +1,18 @@
+import { Constants, DocumentService, FolderService, IClock, IEventBus, IFileSystem, IIDGenerator, WorkspaceManager } from '@novakshar/core'
 import path from 'node:path'
-import { DesktopFileSystem } from '../filesystem'
 import { WorkspaceFileStore, WorkspaceSession, WorkspaceValidator } from '.'
 import { SQLiteAttachmentStore, SQLiteDatabase, SQLiteDocumentStore, SQLiteFolderStore, SQLiteMigrationRunner } from '../persistence'
-import { Constants, DocumentService, EventBus, FolderService, SystemClock, UlidGenerator, WorkspaceManager } from '@novakshar/core'
 
 export class WorkspaceLoader {
+    constructor(
+        private readonly fileSystem: IFileSystem,
+        private readonly idGenerator: IIDGenerator,
+        private readonly clock: IClock,
+        private readonly eventBus: IEventBus
+    ) { }
+
     public async load(workspacePath: string): Promise<WorkspaceSession> {
-        const fileSystem = new DesktopFileSystem()
-        const validator = new WorkspaceValidator(fileSystem)
+        const validator = new WorkspaceValidator(this.fileSystem)
         const validation = await validator.validate(workspacePath)
         if(!validation.valid) throw new Error(validation.reason)
 
@@ -15,18 +20,14 @@ export class WorkspaceLoader {
         const migrationRunner = new SQLiteMigrationRunner(database.context)
         migrationRunner.migrate()
 
-        const workspaceStore = new WorkspaceFileStore(fileSystem, workspacePath)
+        const workspaceStore = new WorkspaceFileStore(this.fileSystem, workspacePath)
         const folderStore = new SQLiteFolderStore(database.context)
         const documentStore = new SQLiteDocumentStore(database.context)
         const attachmentStore = new SQLiteAttachmentStore(database.context)
-
-        const eventBus = new EventBus()
-        const clock = new SystemClock()
-        const idGenerator = new UlidGenerator()
         
-        const workspaceManager = new WorkspaceManager(workspaceStore, eventBus, clock, idGenerator)
-        const documentService = new DocumentService(documentStore, folderStore, fileSystem, eventBus, clock, idGenerator)
-        const folderService = new FolderService(folderStore, eventBus, clock, idGenerator)
+        const workspaceManager = new WorkspaceManager(workspaceStore, this.eventBus, this.clock, this.idGenerator)
+        const documentService = new DocumentService(documentStore, folderStore, this.fileSystem, this.eventBus, this.clock, this.idGenerator)
+        const folderService = new FolderService(folderStore, this.eventBus, this.clock, this.idGenerator)
 
         return new WorkspaceSession(workspaceManager, documentService, folderService, async() => database.close())
     }
