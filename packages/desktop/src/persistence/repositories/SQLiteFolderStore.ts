@@ -20,6 +20,16 @@ export class SQLiteFolderStore implements IFolderStore {
         return row ? this.toEntity(row) : null
     }
 
+    public async getChildren(parentID: string): Promise<Folder[]> {
+        const rows = this.context.all<FolderRow>(FolderQueries.GetChildren, { parentID })
+        return rows.map(row => this.toEntity(row))
+    }
+
+    public async getRootFolders(): Promise<Folder[]> {
+        const rows = this.context.all<FolderRow>(FolderQueries.GetRootFolders)
+        return rows.map(row => this.toEntity(row))
+    }
+
     public async save(folder: Folder): Promise<void> {
         this.context.run(FolderQueries.InsertOrReplace, this.toRow(folder))
     }

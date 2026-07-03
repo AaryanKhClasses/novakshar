@@ -32,6 +32,14 @@ export class DocumentService {
         return document
     }
 
+    public async get(documentID: string): Promise<Document | null> {
+        return this.documentStore.get(documentID)
+    }
+
+    public async getByFolder(folderID: string | null): Promise<Document[]> {
+        return this.documentStore.getByFolder(folderID)
+    }
+
     public async rename(context: OperationContext, documentID: string, title: string): Promise<void> {
         const document = await this.getDocumentOrThrow(documentID)
         const prevTitle = document.title

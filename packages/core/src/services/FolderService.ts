@@ -29,6 +29,18 @@ export class FolderService {
         return folder
     }
 
+    public async get(folderID: string): Promise<Folder | null> {
+        return await this.folderStore.get(folderID)
+    }
+
+    public async getChildren(parentID: string): Promise<Folder[]> {
+        return await this.folderStore.getChildren(parentID)
+    }
+
+    public async getRootFolders(): Promise<Folder[]> {
+        return await this.folderStore.getRootFolders()
+    }
+
     public async rename(context: OperationContext, folderID: string, name: string): Promise<void> {
         const folder = await this.getFolderOrThrow(folderID)
         const prevName = folder.name
@@ -48,7 +60,7 @@ export class FolderService {
         await this.eventBus.publish(new FolderMovedEvent({
             id: this.idGenerator.generate(),
             occuredAt: context.timestamp
-        }, folder.id, prevParentID!, parentID!))
+        }, folder.id, prevParentID, parentID))
     }
 
     public async delete(context: OperationContext, folderID: string): Promise<void> {

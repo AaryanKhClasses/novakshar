@@ -4,7 +4,7 @@ import { BaseEntity } from './BaseEntity'
 export interface FolderProps {
     id: string
     name: string
-    parentID?: string | null
+    parentID: string | null
     color?: string | null
     icon?: string | null
     createdAt: Date
@@ -13,7 +13,7 @@ export interface FolderProps {
 
 export class Folder extends BaseEntity {
     private _name: string
-    private _parentID?: string | null
+    private _parentID: string | null
     private _color?: string | null
     private _icon?: string | null
 
@@ -32,7 +32,7 @@ export class Folder extends BaseEntity {
     }
 
     public get name(): string { return this._name }
-    public get parentID(): string | null | undefined { return this._parentID }
+    public get parentID(): string | null { return this._parentID }
     public get color(): string | null | undefined { return this._color }
     public get icon(): string | null | undefined { return this._icon }
 

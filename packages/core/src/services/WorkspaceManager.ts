@@ -29,6 +29,10 @@ export class WorkspaceManager {
         return workspace
     }
 
+    public async get(): Promise<Workspace | null> {
+        return await this.workspaceStore.get()
+    }
+
     public async open(context: OperationContext): Promise<Workspace | null> {
         const workspace = await this.workspaceStore.get()
         if(!workspace) return null
