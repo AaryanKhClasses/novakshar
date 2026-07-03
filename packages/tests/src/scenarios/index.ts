@@ -1,4 +1,7 @@
 export * from './CreateWorkspaceScenario'
 export * from './DocumentLifecycleScenario'
+export * from './EventScenario'
 export * from './FolderLifecycleScenario'
 export * from './OpenWorkspaceScenario'
+export * from './PersistenceScenario'
+export * from './ScaleScenario'

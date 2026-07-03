@@ -1,15 +1,20 @@
-import { EventBus, SystemClock, UlidGenerator } from '@novakshar/core'
+import { EventBus, IClock, IEventBus, IFileSystem, IIDGenerator, SystemClock, UlidGenerator } from '@novakshar/core'
 import { DesktopFileSystem } from '..'
 import { WorkspaceInitializer, WorkspaceLoader, WorkspaceSession } from '../workspace'
 
 export class DesktopBootstrap {
-    private readonly fileSystem = new DesktopFileSystem()
-    private readonly clock = new SystemClock()
-    private readonly idGenerator = new UlidGenerator()
-    private readonly eventBus = new EventBus()
+    private readonly workspaceInitializer: WorkspaceInitializer
+    private readonly workspaceLoader: WorkspaceLoader
 
-    private readonly workspaceInitializer = new WorkspaceInitializer(this.fileSystem, this.idGenerator, this.clock)
-    private readonly workspaceLoader = new WorkspaceLoader(this.fileSystem, this.idGenerator, this.clock, this.eventBus)
+    constructor(
+        private readonly fileSystem: IFileSystem = new DesktopFileSystem(),
+        private readonly clock: IClock = new SystemClock(),
+        private readonly idGenerator: IIDGenerator = new UlidGenerator(),
+        private readonly eventBus: IEventBus = new EventBus()
+    ) {
+        this.workspaceInitializer = new WorkspaceInitializer(this.fileSystem, this.idGenerator, this.clock)
+        this.workspaceLoader = new WorkspaceLoader(this.fileSystem, this.idGenerator, this.clock, this.eventBus)
+    }
 
     public async openWorkspace(workspacePath: string): Promise<WorkspaceSession> {
         return this.workspaceLoader.load(workspacePath)
