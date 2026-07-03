@@ -1,11 +1,11 @@
+import { OperationContext } from '@novakshar/core'
 import { DesktopBootstrap } from '@novakshar/desktop'
+import { Assert } from '../helpers/Assert'
 import { TemporaryWorkspace } from '../helpers/TemporaryWorkspace'
 import { Scenario } from '../Scenario'
-import { OperationContext } from '@novakshar/core'
-import { Assert } from '../helpers/Assert'
 
 export class FolderLifecycleScenario implements Scenario {
-    public readonly name = 'Folder Lifecycle Scenario'
+    public readonly name = 'Folder Lifecycle'
     
     public async run(): Promise<void> {
         const workspace = new TemporaryWorkspace()

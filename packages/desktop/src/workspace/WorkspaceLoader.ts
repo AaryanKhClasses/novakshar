@@ -1,6 +1,7 @@
 import { Constants, DocumentService, FolderService, IClock, IEventBus, IFileSystem, IIDGenerator, WorkspaceManager } from '@novakshar/core'
 import path from 'node:path'
 import { WorkspaceFileStore, WorkspaceSession, WorkspaceValidator } from '.'
+import { DesktopDocumentFileStore } from '../filesystem'
 import { SQLiteAttachmentStore, SQLiteDatabase, SQLiteDocumentStore, SQLiteFolderStore, SQLiteMigrationRunner } from '../persistence'
 
 export class WorkspaceLoader {
@@ -23,10 +24,11 @@ export class WorkspaceLoader {
         const workspaceStore = new WorkspaceFileStore(this.fileSystem, workspacePath)
         const folderStore = new SQLiteFolderStore(database.context)
         const documentStore = new SQLiteDocumentStore(database.context)
+        const documentFileStore = new DesktopDocumentFileStore(this.fileSystem, workspacePath)
         const attachmentStore = new SQLiteAttachmentStore(database.context)
         
         const workspaceManager = new WorkspaceManager(workspaceStore, this.eventBus, this.clock, this.idGenerator)
-        const documentService = new DocumentService(documentStore, folderStore, this.fileSystem, this.eventBus, this.clock, this.idGenerator)
+        const documentService = new DocumentService(documentStore, documentFileStore, folderStore, this.eventBus, this.clock, this.idGenerator)
         const folderService = new FolderService(folderStore, this.eventBus, this.clock, this.idGenerator)
 
         return new WorkspaceSession(workspaceManager, documentService, folderService, async() => database.close())

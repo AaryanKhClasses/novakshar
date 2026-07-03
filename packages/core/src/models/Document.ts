@@ -15,7 +15,7 @@ export interface DocumentProps {
 export class Document extends BaseEntity {
     private _title: string
     private _relativePath: string
-    private _folderID?: string | null
+    private _folderID: string | null
     private _favorite: boolean
     private _deleted: boolean
 
@@ -37,7 +37,7 @@ export class Document extends BaseEntity {
 
     public get title(): string { return this._title }
     public get relativePath(): string { return this._relativePath }
-    public get folderID(): string | null | undefined { return this._folderID }
+    public get folderID(): string | null { return this._folderID }
     public get favorite(): boolean { return this._favorite }
     public get deleted(): boolean { return this._deleted }
 

@@ -9,9 +9,9 @@ export class ScenarioRunner {
 
     public async run(): Promise<void> {
         console.log(`
-            ================================
+            ===========================
             Novakshar Integration Tests
-            ================================    
+            ===========================
         `)
 
         for(const scenario of this.scenarios) {

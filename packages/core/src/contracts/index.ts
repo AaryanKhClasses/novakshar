@@ -1,4 +1,5 @@
 export * from './IAttachmentStore'
+export * from './IDocumentFileStore'
 export * from './IDocumentStore'
 export * from './IEventBus'
 export * from './IFileSystem'

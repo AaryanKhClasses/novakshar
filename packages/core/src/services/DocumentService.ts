@@ -1,11 +1,12 @@
-import { IEventBus, IClock, IIDGenerator, Document, IDocumentStore, IFolderStore, IFileSystem, DocumentCreatedEvent, DocumentError, DocumentRenamedEvent, DocumentMovedEvent, DocumentFavoritedEvent, DocumentUnfavoritedEvent, DocumentDeletedEvent, DocumentRestoredEvent } from '..'
+import { Document, DocumentCreatedEvent, DocumentDeletedEvent, DocumentError, DocumentFavoritedEvent, DocumentMovedEvent, DocumentRenamedEvent, DocumentRestoredEvent, DocumentUnfavoritedEvent, IClock, IDocumentStore, IEventBus, IFolderStore, IIDGenerator } from '..'
+import { IDocumentFileStore } from '../contracts/IDocumentFileStore'
 import { OperationContext } from './OperationContext'
 
 export class DocumentService {
     constructor(
         private readonly documentStore: IDocumentStore,
+        private readonly documentFileStore: IDocumentFileStore,
         private readonly folderStore: IFolderStore,
-        private readonly fileSystem: IFileSystem,
         private readonly eventBus: IEventBus,
         private readonly clock: IClock,
         private readonly idGenerator: IIDGenerator
@@ -13,6 +14,7 @@ export class DocumentService {
 
     public async create(context: OperationContext, title: string, relativePath: string, folderID: string | null): Promise<Document> {
         const now = context.timestamp
+        await this.documentFileStore.create(relativePath, title)
         const document = new Document({
             id: this.idGenerator.generate(),
             title,
@@ -40,10 +42,12 @@ export class DocumentService {
         return this.documentStore.getByFolder(folderID)
     }
 
-    public async rename(context: OperationContext, documentID: string, title: string): Promise<void> {
+    public async rename(context: OperationContext, documentID: string, title: string, newRelativePath: string): Promise<void> {
         const document = await this.getDocumentOrThrow(documentID)
         const prevTitle = document.title
+        await this.documentFileStore.move(document.relativePath, newRelativePath)
         document.rename(title, context.timestamp)
+        document.moveToPath(newRelativePath, context.timestamp)
         await this.documentStore.save(document)
         await this.eventBus.publish(new DocumentRenamedEvent({
             id: this.idGenerator.generate(),
@@ -51,15 +55,17 @@ export class DocumentService {
         }, document.id, prevTitle, title))
     }
 
-    public async move(context: OperationContext, documentID: string, folderID: string | null): Promise<void> {
+    public async move(context: OperationContext, documentID: string, folderID: string | null, newRelativePath: string): Promise<void> {
         const document = await this.getDocumentOrThrow(documentID)
         const prevFolderID = document.folderID
+        await this.documentFileStore.move(document.relativePath, newRelativePath)
         document.moveToFolder(folderID, context.timestamp)
+        document.moveToPath(newRelativePath, context.timestamp)
         await this.documentStore.save(document)
         await this.eventBus.publish(new DocumentMovedEvent({
             id: this.idGenerator.generate(),
             occuredAt: context.timestamp
-        }, document.id, prevFolderID!, folderID!))
+        }, document.id, prevFolderID, folderID))
     }
 
     public async favorite(context: OperationContext, documentID: string): Promise<void> {

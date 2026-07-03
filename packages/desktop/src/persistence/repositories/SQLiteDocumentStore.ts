@@ -1,14 +1,14 @@
 import { Document, IDocumentStore } from '@novakshar/core'
-import { SQLiteContext } from '../sqlite/SQLiteContext'
 import { DocumentQueries } from '../..'
+import { SQLiteContext } from '../sqlite/SQLiteContext'
 
 interface DocumentRow {
     id: string
     folder_id: string | null
     title: string
     relative_path: string
-    favorite: boolean
-    deleted: boolean
+    favorite: number
+    deleted: number
     created_at: string
     updated_at: string
 }
@@ -42,8 +42,8 @@ export class SQLiteDocumentStore implements IDocumentStore {
             folderID: row.folder_id ?? null,
             title: row.title,
             relativePath: row.relative_path,
-            favorite: row.favorite,
-            deleted: row.deleted,
+            favorite: Boolean(row.favorite),
+            deleted: Boolean(row.deleted),
             createdAt: new Date(row.created_at),
             updatedAt: new Date(row.updated_at)
         })
@@ -55,8 +55,8 @@ export class SQLiteDocumentStore implements IDocumentStore {
             folder_id: document.folderID ?? null,
             title: document.title,
             relative_path: document.relativePath,
-            favorite: document.favorite,
-            deleted: document.deleted,
+            favorite: document.favorite ? 1 : 0,
+            deleted: document.deleted ? 1 : 0,
             created_at: document.createdAt.toISOString(),
             updated_at: document.updatedAt.toISOString()
         }
