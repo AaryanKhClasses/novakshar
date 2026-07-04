@@ -1,10 +1,10 @@
-import { Layout } from './layout'
+import { AppFrame } from './layouts/AppFrame'
 import { ApplicationProvider, WorkspaceProvider } from './providers'
 
 export default function App() {
     return <ApplicationProvider>
         <WorkspaceProvider>
-            <Layout />
+            <AppFrame />
         </WorkspaceProvider>
     </ApplicationProvider>
 }
