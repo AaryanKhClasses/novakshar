@@ -26,11 +26,14 @@ export class WorkspaceLoader {
         const documentStore = new SQLiteDocumentStore(database.context)
         const documentFileStore = new DesktopDocumentFileStore(this.fileSystem, workspacePath)
         const attachmentStore = new SQLiteAttachmentStore(database.context)
-        
+
         const workspaceManager = new WorkspaceManager(workspaceStore, this.eventBus, this.clock, this.idGenerator)
         const documentService = new DocumentService(documentStore, documentFileStore, folderStore, this.eventBus, this.clock, this.idGenerator)
         const folderService = new FolderService(folderStore, this.eventBus, this.clock, this.idGenerator)
 
-        return new WorkspaceSession(workspaceManager, documentService, folderService, async() => database.close())
+        const workspace = await workspaceManager.get()
+        if(!workspace) throw new Error('Workspace not found')
+
+        return new WorkspaceSession(workspace, workspaceManager, documentService, folderService, async() => database.close())
     }
 }

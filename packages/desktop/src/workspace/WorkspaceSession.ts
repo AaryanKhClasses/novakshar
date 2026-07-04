@@ -1,7 +1,8 @@
-import { DocumentService, FolderService, WorkspaceManager } from '@novakshar/core'
+import { DocumentService, FolderService, Workspace, WorkspaceManager } from '@novakshar/core'
 
 export class WorkspaceSession {
     constructor(
+        public readonly workspace: Workspace,
         public readonly workspaceManager: WorkspaceManager,
         public readonly documentService: DocumentService,
         public readonly folderService: FolderService,

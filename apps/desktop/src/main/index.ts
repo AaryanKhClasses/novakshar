@@ -1,7 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { ApplicationHost } from './ApplicationHost'
 import { registerWorkspaceIPC } from './ipc'
+
+const host = new ApplicationHost()
 
 function createWindow(): void {
     const mainWindow = new BrowserWindow({
@@ -50,7 +53,7 @@ app.whenReady().then(() => {
 
     // IPC test
     ipcMain.on('ping', () => console.log('pong'))
-    registerWorkspaceIPC()
+    registerWorkspaceIPC(host)
 
     createWindow()
 

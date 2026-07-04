@@ -4,12 +4,32 @@ import { defineConfig } from 'electron-vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-    main: {},
-    preload: {},
+    main: {
+        build: {
+            rollupOptions: {
+                external: ['better-sqlite3']
+            }
+        },
+        resolve: {
+            alias: {
+                '@main': resolve('src/main'),
+                '@shared': resolve('src/shared')
+            }
+        }
+    },
+    preload: {
+        resolve: {
+            alias: {
+                '@preload': resolve('src/preload'),
+                '@shared': resolve('src/shared')
+            }
+        }
+    },
     renderer: {
         resolve: {
             alias: {
-                '@renderer': resolve('src/renderer/src')
+                '@renderer': resolve('src/renderer/src'),
+                '@shared': resolve('src/shared')
             }
         },
         plugins: [react(), tailwindcss()] as any

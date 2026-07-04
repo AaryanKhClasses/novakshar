@@ -17,18 +17,18 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
     const [workspacePath, setWorkspacePath] = useState<string | null>(null)
 
     const createWorkspace = async(path: string, name: string) => {
-        // await window.novakshar.workspace.create(path, name)
+        await window.novakshar.workspace.create({ path, name })
         setWorkspaceName(name)
         setWorkspacePath(path)
     }
 
     const openWorkspace = async(path: string) => {
-        // const name = await window.novakshar.workspace.open(path)
+        await window.novakshar.workspace.open({ path })
         setWorkspacePath(path)
     }
 
     const closeWorkspace = async() => {
-        // await window.novakshar.workspace.close()
+        await window.novakshar.workspace.close()
         setWorkspaceName(null)
         setWorkspacePath(null)
     }

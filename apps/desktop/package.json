@@ -20,7 +20,9 @@
         "@electron-toolkit/preload": "^3.0.2",
         "@electron-toolkit/utils": "^4.0.0",
         "@tailwindcss/vite": "^4.3.2",
-        "tailwindcss": "^4.3.2"
+        "tailwindcss": "^4.3.2",
+        "@novakshar/core": "file:../../packages/core",
+        "@novakshar/desktop": "file:../../packages/desktop"
     },
     "devDependencies": {
         "@electron-toolkit/eslint-config-ts": "^3.1.0",
