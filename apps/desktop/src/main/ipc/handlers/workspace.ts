@@ -1,6 +1,5 @@
 import { ApplicationHost } from '@main/ApplicationHost'
 import { IPCChannels } from '@shared/channels'
-import { CreateWorkspaceRequest, OpenWorkspaceRequest } from '@shared/workspace'
 import { ipcMain } from 'electron'
 
 export function registerWorkspaceIPC(host: ApplicationHost): void {
@@ -8,12 +7,12 @@ export function registerWorkspaceIPC(host: ApplicationHost): void {
         return 'pong'
     })
 
-    ipcMain.handle(IPCChannels.workspace.create, async(_, request: CreateWorkspaceRequest) => {
-        return await host.createWorkspace(request.path, request.name)
+    ipcMain.handle(IPCChannels.workspace.create, async() => {
+        return await host.createWorkspace()
     })
 
-    ipcMain.handle(IPCChannels.workspace.open, async(_, request: OpenWorkspaceRequest) => {
-        return await host.openWorkspace(request.path)
+    ipcMain.handle(IPCChannels.workspace.open, async() => {
+        return await host.openWorkspace()
     })
 
     ipcMain.handle(IPCChannels.workspace.close, async() => {

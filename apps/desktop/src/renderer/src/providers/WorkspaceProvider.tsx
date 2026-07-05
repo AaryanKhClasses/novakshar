@@ -5,8 +5,8 @@ export interface WorkspaceContextValue {
     workspaceName: string | null
     workspacePath: string | null
 
-    createWorkspace: (name: string, path: string) => Promise<void>
-    openWorkspace: (path: string) => Promise<void>
+    createWorkspace: () => Promise<void>
+    openWorkspace: () => Promise<void>
     closeWorkspace: () => Promise<void>
 }
 
@@ -16,15 +16,18 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
     const [workspaceName, setWorkspaceName] = useState<string | null>(null)
     const [workspacePath, setWorkspacePath] = useState<string | null>(null)
 
-    const createWorkspace = async(path: string, name: string) => {
-        await window.novakshar.workspace.create({ path, name })
-        setWorkspaceName(name)
-        setWorkspacePath(path)
+    const createWorkspace = async() => {
+        const workspace = await window.novakshar.workspace.create()
+        if(!workspace) return
+        setWorkspaceName(workspace.name)
+        setWorkspacePath(workspace.path)
     }
 
-    const openWorkspace = async(path: string) => {
-        await window.novakshar.workspace.open({ path })
-        setWorkspacePath(path)
+    const openWorkspace = async() => {
+        const workspace = await window.novakshar.workspace.open()
+        if(!workspace) return
+        setWorkspaceName(workspace.name)
+        setWorkspacePath(workspace.path)
     }
 
     const closeWorkspace = async() => {

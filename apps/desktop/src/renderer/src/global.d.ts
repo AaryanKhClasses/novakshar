@@ -1,4 +1,4 @@
-import { CreateWorkspaceRequest, OpenWorkspaceRequest, WorkspaceInfo } from '@shared/workspace'
+import { WorkspaceInfo } from '@shared/workspace'
 
 export { }
 
@@ -7,8 +7,8 @@ declare global {
         novakshar: {
             workspace: {
                 ping(): Promise<string>
-                create(request: CreateWorkspaceRequest): Promise<WorkspaceInfo>
-                open(request: OpenWorkspaceRequest): Promise<WorkspaceInfo>
+                create(): Promise<WorkspaceInfo | null>
+                open(): Promise<WorkspaceInfo | null>
                 close(): Promise<void>
             }
         }

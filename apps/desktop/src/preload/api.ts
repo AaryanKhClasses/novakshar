@@ -1,5 +1,5 @@
 import { IPCChannels } from '@shared/channels'
-import { CreateWorkspaceRequest, OpenWorkspaceRequest, WorkspaceInfo } from '@shared/workspace'
+import { WorkspaceInfo } from '@shared/workspace'
 import { ipcRenderer } from 'electron'
 
 export const api = {
@@ -7,11 +7,11 @@ export const api = {
         ping(): Promise<string> {
             return ipcRenderer.invoke(IPCChannels.workspace.ping)
         },
-        create(request: CreateWorkspaceRequest): Promise<WorkspaceInfo> {
-            return ipcRenderer.invoke(IPCChannels.workspace.create, request)
+        create(): Promise<WorkspaceInfo | null> {
+            return ipcRenderer.invoke(IPCChannels.workspace.create)
         },
-        open(request: OpenWorkspaceRequest): Promise<WorkspaceInfo> {
-            return ipcRenderer.invoke(IPCChannels.workspace.open, request)
+        open(): Promise<WorkspaceInfo | null> {
+            return ipcRenderer.invoke(IPCChannels.workspace.open)
         },
         close(): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.workspace.close)
