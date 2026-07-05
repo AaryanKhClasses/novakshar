@@ -1,4 +1,4 @@
-import { AppSettings } from '../models/AppSettings'
+import { AppSettings } from '../models/AppSettings.js'
 
 export interface ISettingsStore {
     load(): Promise<AppSettings>

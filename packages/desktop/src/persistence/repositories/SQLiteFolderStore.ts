@@ -1,6 +1,6 @@
 import { Folder, IFolderStore } from '@novakshar/core'
-import { SQLiteContext } from '../sqlite/SQLiteContext'
-import { FolderQueries } from '../..'
+import { FolderQueries } from '../queries/FolderQueries.js'
+import { SQLiteContext } from '../sqlite/SQLiteContext.js'
 
 interface FolderRow {
     id: string

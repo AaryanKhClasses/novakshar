@@ -1,4 +1,4 @@
-import { Document } from '../models/Document'
+import { Document } from '../models/Document.js'
 
 export interface ISearchIndex {
     indexDocument(document: Document): Promise<void>

@@ -1,4 +1,4 @@
-import { Document } from '../models/Document'
+import { Document } from '../models/Document.js'
 
 export interface IDocumentStore {
     get(id: string): Promise<Document | null>

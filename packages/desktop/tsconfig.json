@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "module": "ESNext",
+        "module": "NodeNext",
         "types": ["node"],
-        "moduleResolution": "Bundler",
+        "moduleResolution": "NodeNext",
         "strict": true,
         "declaration": true,
         "declarationMap": true,

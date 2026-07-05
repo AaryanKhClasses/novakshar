@@ -1,5 +1,5 @@
-import { IEventBus, IClock, IIDGenerator, IFolderStore, Folder, FolderCreatedEvent, FolderError, FolderRenamedEvent, FolderMovedEvent, FolderDeletedEvent } from '..'
-import { OperationContext } from './OperationContext'
+import { IEventBus, IClock, IIDGenerator, IFolderStore, Folder, FolderCreatedEvent, FolderError, FolderRenamedEvent, FolderMovedEvent, FolderDeletedEvent } from '../index.js'
+import { OperationContext } from './OperationContext.js'
 
 export class FolderService {
     constructor(

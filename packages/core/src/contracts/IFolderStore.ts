@@ -1,4 +1,4 @@
-import { Folder } from '../models/Folder'
+import { Folder } from '../models/Folder.js'
 
 export interface IFolderStore {
     get(id: string): Promise<Folder | null>

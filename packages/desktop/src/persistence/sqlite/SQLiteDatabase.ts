@@ -1,5 +1,5 @@
 import Database from 'better-sqlite3'
-import { SQLiteContext } from './SQLiteContext'
+import { SQLiteContext } from './SQLiteContext.js'
 
 export class SQLiteDatabase {
     private readonly database: Database.Database

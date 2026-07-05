@@ -1,4 +1,4 @@
-import { Attachment } from '../models/Attachment'
+import { Attachment } from '../models/Attachment.js'
 
 export interface IAttachmentStore {
     get(id: string): Promise<Attachment | null>

@@ -1,3 +1,3 @@
-export * from './WorkspaceCreatedEvent'
-export * from './WorkspaceOpenedEvent'
-export * from './WorkspaceClosedEvent'
+export * from './WorkspaceCreatedEvent.js'
+export * from './WorkspaceOpenedEvent.js'
+export * from './WorkspaceClosedEvent.js'

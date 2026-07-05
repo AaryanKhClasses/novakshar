@@ -1,6 +1,5 @@
 import { EventBus, IClock, IEventBus, IFileSystem, IIDGenerator, SystemClock, UlidGenerator } from '@novakshar/core'
-import { DesktopFileSystem } from '..'
-import { WorkspaceInitializer, WorkspaceLoader, WorkspaceSession } from '../workspace'
+import { DesktopFileSystem, WorkspaceInitializer, WorkspaceLoader, WorkspaceSession } from '../index.js'
 
 export class DesktopBootstrap {
     private readonly workspaceInitializer: WorkspaceInitializer

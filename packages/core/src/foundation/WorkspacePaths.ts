@@ -1,4 +1,4 @@
-import { Constants } from './Constants'
+import { Constants } from './Constants.js'
 
 export class WorkspacePaths {
     constructor(private readonly root: string) { }

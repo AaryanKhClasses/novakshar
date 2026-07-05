@@ -1,4 +1,4 @@
-import { Workspace } from '../models/Workspace'
+import { Workspace } from '../models/Workspace.js'
 
 export interface IWorkspaceStore {
     exists(): Promise<boolean>

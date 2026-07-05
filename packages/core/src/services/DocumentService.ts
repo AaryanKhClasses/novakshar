@@ -1,6 +1,6 @@
-import { Document, DocumentCreatedEvent, DocumentDeletedEvent, DocumentError, DocumentFavoritedEvent, DocumentMovedEvent, DocumentRenamedEvent, DocumentRestoredEvent, DocumentUnfavoritedEvent, IClock, IDocumentStore, IEventBus, IFolderStore, IIDGenerator } from '..'
-import { IDocumentFileStore } from '../contracts/IDocumentFileStore'
-import { OperationContext } from './OperationContext'
+import { Document, DocumentCreatedEvent, DocumentDeletedEvent, DocumentError, DocumentFavoritedEvent, DocumentMovedEvent, DocumentRenamedEvent, DocumentRestoredEvent, DocumentUnfavoritedEvent, IClock, IDocumentStore, IEventBus, IFolderStore, IIDGenerator } from '../index.js'
+import { IDocumentFileStore } from '../contracts/IDocumentFileStore.js'
+import { OperationContext } from './OperationContext.js'
 
 export class DocumentService {
     constructor(

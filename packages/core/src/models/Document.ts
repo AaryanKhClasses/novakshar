@@ -1,5 +1,5 @@
-import { ValidationError } from '../errors'
-import { BaseEntity } from './BaseEntity'
+import { ValidationError } from '../errors/index.js'
+import { BaseEntity } from './BaseEntity.js'
 
 export interface DocumentProps {
     id: string

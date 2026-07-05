@@ -1,6 +1,6 @@
-import { IAttachmentStore, Attachment } from '@novakshar/core'
-import { SQLiteContext } from '../sqlite/SQLiteContext'
-import { AttachmentQueries } from '../..'
+import { Attachment, IAttachmentStore } from '@novakshar/core'
+import { AttachmentQueries } from '../queries/AttachmentQueries.js'
+import { SQLiteContext } from '../sqlite/SQLiteContext.js'
 
 interface AttachmentRow {
     id: string

@@ -1,8 +1,6 @@
 import { Constants, DocumentService, FolderService, IClock, IEventBus, IFileSystem, IIDGenerator, WorkspaceManager } from '@novakshar/core'
 import path from 'node:path'
-import { WorkspaceFileStore, WorkspaceSession, WorkspaceValidator } from '.'
-import { DesktopDocumentFileStore } from '../filesystem'
-import { SQLiteAttachmentStore, SQLiteDatabase, SQLiteDocumentStore, SQLiteFolderStore, SQLiteMigrationRunner } from '../persistence'
+import { DesktopDocumentFileStore, SQLiteAttachmentStore, SQLiteDatabase, SQLiteDocumentStore, SQLiteFolderStore, SQLiteMigrationRunner, WorkspaceFileStore, WorkspaceSession, WorkspaceValidator } from '../index.js'
 
 export class WorkspaceLoader {
     constructor(

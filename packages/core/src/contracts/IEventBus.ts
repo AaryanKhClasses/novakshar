@@ -1,4 +1,4 @@
-import { EventHandler, IEvent } from '../events'
+import { EventHandler, IEvent } from '../events/index.js'
 
 export type EventConstructor<T extends IEvent> = new (...args: any[]) => T
 

@@ -1,6 +1,6 @@
 import { Constants, IClock, IFileSystem, IIDGenerator, Workspace } from '@novakshar/core'
 import * as path from 'node:path'
-import { WorkspaceFileStore } from './WorkspaceFileStore'
+import { WorkspaceFileStore } from './WorkspaceFileStore.js'
 
 export class WorkspaceInitializer {
     constructor(

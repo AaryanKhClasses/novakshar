@@ -1,6 +1,6 @@
 import { Document, IDocumentStore } from '@novakshar/core'
-import { DocumentQueries } from '../..'
-import { SQLiteContext } from '../sqlite/SQLiteContext'
+import { DocumentQueries } from '../queries/DocumentQueries.js'
+import { SQLiteContext } from '../sqlite/SQLiteContext.js'
 
 interface DocumentRow {
     id: string

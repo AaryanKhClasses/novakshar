@@ -1,6 +1,6 @@
-import { IEventBus, EventConstructor } from '../contracts'
-import { EventHandler } from './EventHandler'
-import { IEvent } from './IEvent'
+import { IEventBus, EventConstructor } from '../contracts/index.js'
+import { EventHandler } from './EventHandler.js'
+import { IEvent } from './IEvent.js'
 
 export class EventBus implements IEventBus {
     private readonly handlers = new Map<EventConstructor<IEvent>, EventHandler<IEvent>[]>()
