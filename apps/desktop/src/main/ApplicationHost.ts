@@ -2,6 +2,7 @@ import { DesktopBootstrap, WorkspaceSession } from '@novakshar/desktop'
 import { WorkspaceInfo } from '@shared/workspace'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
+import { FolderInfo } from '@shared/folder'
 
 export class ApplicationHost {
     private readonly bootstrap = new DesktopBootstrap()
@@ -47,6 +48,32 @@ export class ApplicationHost {
         if(!this.session) return
         await this.session.dispose()
         this.session = null
+    }
+
+    public async getRootFolders(): Promise<FolderInfo[]> {
+        if(!this.session) return []
+        const folders = await this.session.getRootFolders()
+        return folders.map(f => ({
+            id: f.id,
+            name: f.name,
+            parentID: f.parentID ?? null,
+            color: f.color ?? null,
+            icon: f.icon ?? null
+        }))
+    }
+
+    public async createFolder(): Promise<FolderInfo> {
+        if(!this.session) throw new Error('No workspace is open')
+
+        const context = { timestamp: new Date() }
+        const folder = await this.session.folderService.create(context, 'New Folder', null)
+        return {
+            id: folder.id,
+            name: folder.name,
+            parentID: folder.parentID ?? null,
+            color: folder.color ?? null,
+            icon: folder.icon ?? null
+        }
     }
 
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {

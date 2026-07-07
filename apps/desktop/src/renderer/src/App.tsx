@@ -1,10 +1,12 @@
 import { AppFrame } from './layouts/AppFrame'
-import { ApplicationProvider, WorkspaceProvider } from './providers'
+import { ApplicationProvider, ExplorerProvider, WorkspaceProvider } from './providers'
 
 export default function App() {
     return <ApplicationProvider>
         <WorkspaceProvider>
-            <AppFrame />
+            <ExplorerProvider>
+                <AppFrame />
+            </ExplorerProvider>
         </WorkspaceProvider>
     </ApplicationProvider>
 }

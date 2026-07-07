@@ -1,9 +1,10 @@
-import { IEventBus, IClock, IIDGenerator, IFolderStore, Folder, FolderCreatedEvent, FolderError, FolderRenamedEvent, FolderMovedEvent, FolderDeletedEvent } from '../index.js'
+import { IEventBus, IClock, IIDGenerator, IFolderStore, Folder, FolderCreatedEvent, FolderError, FolderRenamedEvent, FolderMovedEvent, FolderDeletedEvent, IFolderFileStore } from '../index.js'
 import { OperationContext } from './OperationContext.js'
 
 export class FolderService {
     constructor(
         private readonly folderStore: IFolderStore,
+        private readonly folderFileStore: IFolderFileStore,
         private readonly eventBus: IEventBus,
         private readonly clock: IClock,
         private readonly idGenerator: IIDGenerator
@@ -20,6 +21,7 @@ export class FolderService {
             createdAt: now,
             updatedAt: now
         })
+        await this.folderFileStore.create(folder)
         await this.folderStore.save(folder)
 
         await this.eventBus.publish(new FolderCreatedEvent({

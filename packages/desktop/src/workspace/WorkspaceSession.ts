@@ -1,4 +1,4 @@
-import { DocumentService, FolderService, Workspace, WorkspaceManager } from '@novakshar/core'
+import { Document, DocumentService, Folder, FolderService, Workspace, WorkspaceManager } from '@novakshar/core'
 
 export class WorkspaceSession {
     constructor(
@@ -11,5 +11,17 @@ export class WorkspaceSession {
 
     public async dispose(): Promise<void> {
         if(this.onDispose) await this.onDispose()
+    }
+
+    public async getRootFolders(): Promise<Folder[]> {
+        return this.folderService.getRootFolders()
+    }
+
+    public async getChildFolders(parentID: string): Promise<Folder[]> {
+        return this.folderService.getChildren(parentID)
+    }
+
+    public async getDocuments(folderID: string | null): Promise<Document[]> {
+        return this.documentService.getByFolder(folderID)
     }
 }

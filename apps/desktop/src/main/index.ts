@@ -2,7 +2,7 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import { ApplicationHost } from './ApplicationHost'
-import { registerWorkspaceIPC } from './ipc'
+import { registerExplorerIPC, registerWorkspaceIPC } from './ipc'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
 
@@ -50,6 +50,7 @@ app.whenReady().then(async() => {
 
     ipcMain.on('ping', () => console.log('pong'))
     registerWorkspaceIPC(host)
+    registerExplorerIPC(host)
     await host.restoreWorkspace()
 
     app.on('activate', function () {

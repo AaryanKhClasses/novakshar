@@ -2,6 +2,8 @@ export { DesktopBootstrap } from './bootstrap/DesktopBootstrap.js'
 
 export { DesktopFileSystem } from './filesystem/DesktopFileSystem.js'
 export { DesktopDocumentFileStore } from './filesystem/DesktopDocumentFileStore.js'
+export { DesktopFolderFileStore } from './filesystem/DesktopFolderFileStore.js'
+export { FolderPathResolver } from './filesystem/FolderPathResolver.js'
 
 export { SQLiteAttachmentStore } from './persistence/repositories/SQLiteAttachmentStore.js'
 export { SQLiteDocumentStore } from './persistence/repositories/SQLiteDocumentStore.js'

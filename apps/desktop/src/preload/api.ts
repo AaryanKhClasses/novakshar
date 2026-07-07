@@ -1,4 +1,5 @@
 import { IPCChannels } from '@shared/channels'
+import { FolderInfo } from '@shared/folder'
 import { WorkspaceInfo } from '@shared/workspace'
 import { ipcRenderer } from 'electron'
 
@@ -15,6 +16,14 @@ export const api = {
         },
         close(): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.workspace.close)
+        }
+    },
+    explorer: {
+        getRootFolders(): Promise<FolderInfo[]> {
+            return ipcRenderer.invoke(IPCChannels.explorer.getRootFolders)
+        },
+        createFolder(): Promise<FolderInfo> {
+            return ipcRenderer.invoke(IPCChannels.explorer.createFolder)
         }
     }
 }

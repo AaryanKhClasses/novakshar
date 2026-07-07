@@ -1,4 +1,5 @@
 import { WorkspaceInfo } from '@shared/workspace'
+import { FolderInfo } from '@shared/folder'
 
 export { }
 
@@ -10,6 +11,10 @@ declare global {
                 create(): Promise<WorkspaceInfo | null>
                 open(): Promise<WorkspaceInfo | null>
                 close(): Promise<void>
+            },
+            explorer: {
+                getRootFolders(): Promise<FolderInfo[]>
+                createFolder(): Promise<FolderInfo>
             }
         }
     }
