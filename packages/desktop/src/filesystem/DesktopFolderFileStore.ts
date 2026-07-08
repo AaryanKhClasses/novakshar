@@ -14,11 +14,18 @@ export class DesktopFolderFileStore implements IFolderFileStore {
         await this.fileSystem.createDirectory(path.join(this.workspaceRoot, Constants.NotesFolder, relative))
     }
 
-    public async rename(folder: Folder): Promise<void> {
-        throw new Error('Method not implemented.')
+    public async update(prev: Folder, current: Folder): Promise<void> {
+        const oldRelative = this.resolver.resolve(prev)
+        const newRelative = this.resolver.resolve(current)
+        if(oldRelative === newRelative) return
+        await this.fileSystem.move(
+            path.join(this.workspaceRoot, Constants.NotesFolder, oldRelative),
+            path.join(this.workspaceRoot, Constants.NotesFolder, newRelative)
+        )
     }
 
     public async delete(folder: Folder): Promise<void> {
-        throw new Error('Method not implemented.')
+        const relative = this.resolver.resolve(folder)
+        await this.fileSystem.deleteDirectory(path.join(this.workspaceRoot, Constants.NotesFolder, relative))
     }
 }

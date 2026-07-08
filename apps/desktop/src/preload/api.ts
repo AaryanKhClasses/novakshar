@@ -24,6 +24,12 @@ export const api = {
         },
         createFolder(): Promise<FolderInfo> {
             return ipcRenderer.invoke(IPCChannels.explorer.createFolder)
+        },
+        renameFolder(folderID: string, name: string): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.explorer.renameFolder, folderID, name)
+        },
+        deleteFolder(folderID: string): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.explorer.deleteFolder, folderID)
         }
     }
 }

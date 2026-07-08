@@ -45,28 +45,31 @@ export class FolderService {
 
     public async rename(context: OperationContext, folderID: string, name: string): Promise<void> {
         const folder = await this.getFolderOrThrow(folderID)
-        const prevName = folder.name
+        const prev = folder.clone()
         folder.rename(name, context.timestamp)
+        await this.folderFileStore.update(prev, folder)
         await this.folderStore.save(folder)
         await this.eventBus.publish(new FolderRenamedEvent({
             id: this.idGenerator.generate(),
             occuredAt: context.timestamp
-        }, folder.id, prevName, name))
+        }, folder.id, prev.name, name))
     }
 
     public async move(context: OperationContext, folderID: string, parentID: string | null): Promise<void> {
         const folder = await this.getFolderOrThrow(folderID)
-        const prevParentID = folder.parentID
+        const prev = folder.clone()
         folder.move(parentID, context.timestamp)
+        await this.folderFileStore.update(prev, folder)
         await this.folderStore.save(folder)
         await this.eventBus.publish(new FolderMovedEvent({
             id: this.idGenerator.generate(),
             occuredAt: context.timestamp
-        }, folder.id, prevParentID, parentID))
+        }, folder.id, prev.parentID, parentID))
     }
 
     public async delete(context: OperationContext, folderID: string): Promise<void> {
         const folder = await this.getFolderOrThrow(folderID)
+        await this.folderFileStore.delete(folder)
         await this.folderStore.delete(folder.id)
         await this.eventBus.publish(new FolderDeletedEvent({
             id: this.idGenerator.generate(),

@@ -5,6 +5,8 @@ interface ExplorerContextValue {
     folders: FolderInfo[]
     refresh(): Promise<void>
     createFolder(): Promise<void>
+    renameFolder(folderID: string, name: string): Promise<void>
+    deleteFolder(folderID: string): Promise<void>
 }
 
 const ExplorerContext = createContext<ExplorerContextValue | null>(null)
@@ -22,6 +24,16 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         await refresh()
     }
 
+    const renameFolder = async(folderID: string, name: string) => {
+        await window.novakshar.explorer.renameFolder(folderID, name)
+        await refresh()
+    }
+
+    const deleteFolder = async(folderID: string) => {
+        await window.novakshar.explorer.deleteFolder(folderID)
+        await refresh()
+    }
+
     useEffect(() => {
         refresh()
     }, [])
@@ -29,7 +41,9 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
     const value: ExplorerContextValue = {
         folders,
         refresh,
-        createFolder
+        createFolder,
+        renameFolder,
+        deleteFolder
     }
 
     return <ExplorerContext.Provider value={value}>

@@ -15,6 +15,8 @@ declare global {
             explorer: {
                 getRootFolders(): Promise<FolderInfo[]>
                 createFolder(): Promise<FolderInfo>
+                renameFolder(folderID: string, name: string): Promise<void>
+                deleteFolder(folderID: string): Promise<void>
             }
         }
     }

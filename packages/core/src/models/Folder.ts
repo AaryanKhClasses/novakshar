@@ -62,6 +62,18 @@ export class Folder extends BaseEntity {
         this.touch(now)
     }
 
+    public clone(): Folder {
+        return new Folder({
+            id: this.id,
+            name: this.name,
+            parentID: this.parentID,
+            color: this.color ?? null,
+            icon: this.icon ?? null,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt
+        })
+    }
+
     private validateName(name: string): void {
         if(name.trim().length === 0) throw new ValidationError('Folder name cannot be empty', 'FOLDER_NAME_EMPTY')
     }

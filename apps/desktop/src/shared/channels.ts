@@ -7,6 +7,8 @@ export const IPCChannels = {
     },
     explorer: {
         getRootFolders: 'explorer:getRootFolders',
-        createFolder: 'explorer:createFolder'
+        createFolder: 'explorer:createFolder',
+        renameFolder: 'explorer:renameFolder',
+        deleteFolder: 'explorer:deleteFolder'
     }
 }

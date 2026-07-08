@@ -76,6 +76,20 @@ export class ApplicationHost {
         }
     }
 
+    public async renameFolder(folderID: string, name: string): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+
+        const context = { timestamp: new Date() }
+        await this.session.folderService.rename(context, folderID, name)
+    }
+
+    public async deleteFolder(folderID: string): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+
+        const context = { timestamp: new Date() }
+        await this.session.folderService.delete(context, folderID)
+    }
+
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {
         await this.closeWorkspace()
         this.session = await this.bootstrap.openWorkspace(path)
