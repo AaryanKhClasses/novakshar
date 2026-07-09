@@ -1,6 +1,9 @@
+import { faFolder, faFolderOpen } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useExplorer } from '@renderer/providers'
 import { FolderInfo } from '@shared/folder'
 import { useState } from 'react'
+import { DocumentNode } from './DocumentNode'
 
 interface Props {
     folder: FolderInfo
@@ -8,9 +11,11 @@ interface Props {
 }
 
 export function FolderNode({ folder, folders }: Props) {
-    const { selectedFolderID, selectFolder, showContextMenu, editing, updateEditingValue, commitRename, cancelRename } = useExplorer()
+    const { documents, selectedFolderID, selectFolder, showContextMenu, editing, updateEditingValue, commitRename, cancelRename } = useExplorer()
     const [expanded, setExpanded] = useState(false)
-    const children = folders.filter(f => f.parentID === folder.id)
+    const folderChildren = folders.filter(f => f.parentID === folder.id)
+    const folderDocuments = documents.filter(d => d.folderID === folder.id)
+    const children = [...folderChildren, ...folderDocuments]
 
     return <div>
         <div onClick={e => {
@@ -23,8 +28,8 @@ export function FolderNode({ folder, folders }: Props) {
                 showContextMenu(folder.id, e.clientX, e.clientY)
             }} className={`cursor-pointer items-center gap-1 rounded-xl px-1 py-0.5 select-none transition duration-300 ease-in-out ${selectedFolderID === folder.id ? 'bg-blue-600 text-white' : 'hover:bg-neutral-700 hover:text-white'}`}
         >
-            {children.length > 0 ? <span>{expanded ? 'v' : '>'}</span> : '•'}
-            {editing?.folderID === folder.id ? <input
+            {children.length > 0 ? <span>{expanded ? <FontAwesomeIcon icon={faFolderOpen} /> : <FontAwesomeIcon icon={faFolder} />}</span> : <FontAwesomeIcon icon={faFolder} />}
+            {editing?.id === folder.id ? <input
                 autoFocus
                 autoComplete="off"
                 value={editing.value}
@@ -38,7 +43,8 @@ export function FolderNode({ folder, folders }: Props) {
             ></input> : <span>{folder.name}</span>}
         </div>
         {expanded && children.length > 0 && <div className="ml-2">
-            {children.map(child => <FolderNode key={child.id} folder={child} folders={folders} />)}
+            {folderChildren.map(child => <FolderNode key={child.id} folder={child} folders={folders} />)}
         </div>}
+        {expanded && folderDocuments.map(document => <DocumentNode key={document.id} document={document} />)}
     </div>
 }

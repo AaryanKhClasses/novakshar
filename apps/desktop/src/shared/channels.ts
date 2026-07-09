@@ -8,7 +8,9 @@ export const IPCChannels = {
     explorer: {
         getRootFolders: 'explorer:getRootFolders',
         getFolders: 'explorer:getFolders',
+        getDocuments: 'explorer:getDocuments',
         createFolder: 'explorer:createFolder',
+        createDocument: 'explorer:createDocument',
         renameFolder: 'explorer:renameFolder',
         deleteFolder: 'explorer:deleteFolder'
     }

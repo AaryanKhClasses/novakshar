@@ -42,6 +42,10 @@ export class DocumentService {
         return this.documentStore.getByFolder(folderID)
     }
 
+    public async getAll(): Promise<Document[]> {
+        return this.documentStore.getAll()
+    }
+
     public async rename(context: OperationContext, documentID: string, title: string, newRelativePath: string): Promise<void> {
         const document = await this.getDocumentOrThrow(documentID)
         const prevTitle = document.title

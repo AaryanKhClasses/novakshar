@@ -3,10 +3,10 @@ import { ExplorerTree } from './ExplorerTree'
 import { ExplorerContextMenu } from './ExplorerContextMenu'
 
 export function ExplorerPane() {
-    const { folders } = useExplorer()
+    const { folders, documents } = useExplorer()
 
     return <div className="h-full p-4">
-        <ExplorerTree folders={folders} />
+        <ExplorerTree folders={folders} documents={documents} />
         <ExplorerContextMenu />
     </div>
 }

@@ -1,4 +1,5 @@
 import { Document, DocumentService, Folder, FolderService, Workspace, WorkspaceManager } from '@novakshar/core'
+import { FolderPathResolver } from '../index.js'
 
 export class WorkspaceSession {
     constructor(
@@ -6,6 +7,7 @@ export class WorkspaceSession {
         public readonly workspaceManager: WorkspaceManager,
         public readonly documentService: DocumentService,
         public readonly folderService: FolderService,
+        public readonly folderPathResolver: FolderPathResolver,
         private readonly onDispose?: () => Promise<void> | void
     ) { }
 
@@ -27,5 +29,9 @@ export class WorkspaceSession {
 
     public async getDocuments(folderID: string | null): Promise<Document[]> {
         return this.documentService.getByFolder(folderID)
+    }
+
+    public async getAllDocuments(): Promise<Document[]> {
+        return this.documentService.getAll()
     }
 }

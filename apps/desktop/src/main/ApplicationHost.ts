@@ -3,6 +3,7 @@ import { WorkspaceInfo } from '@shared/workspace'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
 import { FolderInfo } from '@shared/folder'
+import { DocumentInfo } from '@shared/document'
 
 export class ApplicationHost {
     private readonly bootstrap = new DesktopBootstrap()
@@ -100,6 +101,33 @@ export class ApplicationHost {
 
         const context = { timestamp: new Date() }
         await this.session.folderService.delete(context, folderID)
+    }
+
+    public async getDocuments(): Promise<DocumentInfo[]> {
+        if(!this.session) return []
+
+        const documents = await this.session.documentService.getAll()
+        return documents.map(d => ({
+            id: d.id,
+            title: d.title,
+            folderID: d.folderID ?? null,
+            favorite: d.favorite
+        }))
+    }
+
+    public async createDocument(folderID: string | null): Promise<DocumentInfo> {
+        if(!this.session) throw new Error('No workspace is open')
+
+        const context = { timestamp: new Date() }
+        const folder = folderID ? await this.session.folderService.get(folderID) : null
+        const relativePath = folder ? `${await this.session.folderPathResolver.resolve(folder)}/Untitled.md` : 'Untitled.md'
+        const document = await this.session.documentService.create(context, 'Untitled', relativePath, folderID)
+        return {
+            id: document.id,
+            title: document.title,
+            folderID: document.folderID ?? null,
+            favorite: document.favorite
+        }
     }
 
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {

@@ -21,10 +21,15 @@ export class SQLiteDocumentStore implements IDocumentStore {
         return row ? this.toEntity(row) : null
     }
 
+    public async getAll(): Promise<Document[]> {
+        const rows = this.context.all<DocumentRow>(DocumentQueries.GetAll)
+        return rows.map(row => this.toEntity(row))
+    }
+
     public async getByFolder(folderID: string | null): Promise<Document[]> {
         const rows = folderID === null
             ? this.context.all<DocumentRow>(DocumentQueries.GetRootDocuments)
-            : this.context.all<DocumentRow>(DocumentQueries.GetByFolder, { folderId: folderID })
+            : this.context.all<DocumentRow>(DocumentQueries.GetByFolder, { folder_id: folderID })
         return rows.map(row => this.toEntity(row))
     }
 

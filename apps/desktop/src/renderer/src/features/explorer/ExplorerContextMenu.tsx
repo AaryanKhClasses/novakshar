@@ -1,7 +1,7 @@
 import { useExplorer } from '@renderer/providers'
 
 export function ExplorerContextMenu() {
-    const { contextMenu, hideContextMenu, createFolder, beginRename, deleteFolder } = useExplorer()
+    const { contextMenu, hideContextMenu, createFolder, createDocument, beginRename, deleteFolder } = useExplorer()
 
     if(!contextMenu) return null
     return <>
@@ -11,6 +11,11 @@ export function ExplorerContextMenu() {
                 hideContextMenu()
                 await createFolder()
             }} />
+            <MenuItem label="New Document" onClick={async() => {
+                hideContextMenu()
+                await createDocument()
+            }} />
+            <hr className="my-2 border-neutral-700" />
             <MenuItem label="Rename Folder" onClick={async() => {
                 hideContextMenu()
                 beginRename(contextMenu.folderID)

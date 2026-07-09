@@ -1,5 +1,5 @@
+import { DocumentInfo, FolderInfo } from '@shared/folder'
 import { WorkspaceInfo } from '@shared/workspace'
-import { FolderInfo } from '@shared/folder'
 
 export { }
 
@@ -15,7 +15,9 @@ declare global {
             explorer: {
                 getRootFolders(): Promise<FolderInfo[]>
                 getFolders(): Promise<FolderInfo[]>
+                getDocuments(): Promise<DocumentInfo[]>
                 createFolder(parentID: string | null): Promise<FolderInfo>
+                createDocument(folderID: string | null): Promise<DocumentInfo>
                 renameFolder(folderID: string, name: string): Promise<void>
                 deleteFolder(folderID: string): Promise<void>
             }

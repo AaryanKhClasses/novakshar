@@ -1,7 +1,13 @@
 import { FolderInfo } from '@shared/folder'
 import { FolderNode } from './FolderNode'
+import { DocumentInfo } from '@shared/document'
+import { DocumentNode } from './DocumentNode'
 
-export function ExplorerTree({ folders }: { folders: FolderInfo[] }) {
+export function ExplorerTree({ folders, documents }: { folders: FolderInfo[], documents: DocumentInfo[] }) {
     const roots = folders.filter(f => f.parentID === null)
-    return roots.map(folder => <FolderNode key={folder.id} folder={folder} folders={folders} />)
+    const rootDocuments = documents.filter(d => d.folderID === null)
+    return <>
+        {roots.map(folder => <FolderNode key={folder.id} folder={folder} folders={folders} />)}
+        {rootDocuments.map(document => <DocumentNode key={document.id} document={document} />)}
+    </>
 }
