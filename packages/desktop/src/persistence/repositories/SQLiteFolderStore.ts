@@ -20,6 +20,11 @@ export class SQLiteFolderStore implements IFolderStore {
         return row ? this.toEntity(row) : null
     }
 
+    public async getAll(): Promise<Folder[]> {
+        const rows = this.context.all<FolderRow>(FolderQueries.GetAll)
+        return rows.map(row => this.toEntity(row))
+    }
+
     public async getChildren(parentID: string): Promise<Folder[]> {
         const rows = this.context.all<FolderRow>(FolderQueries.GetChildren, { parentID })
         return rows.map(row => this.toEntity(row))

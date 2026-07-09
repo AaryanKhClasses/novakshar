@@ -62,11 +62,23 @@ export class ApplicationHost {
         }))
     }
 
-    public async createFolder(): Promise<FolderInfo> {
+    public async getFolders(): Promise<FolderInfo[]> {
+        if(!this.session) return []
+        const folders = await this.session.getAllFolders()
+        return folders.map(f => ({
+            id: f.id,
+            name: f.name,
+            parentID: f.parentID ?? null,
+            color: f.color ?? null,
+            icon: f.icon ?? null
+        }))
+    }
+
+    public async createFolder(parentID: string | null): Promise<FolderInfo> {
         if(!this.session) throw new Error('No workspace is open')
 
         const context = { timestamp: new Date() }
-        const folder = await this.session.folderService.create(context, 'New Folder', null)
+        const folder = await this.session.folderService.create(context, 'New Folder', parentID)
         return {
             id: folder.id,
             name: folder.name,

@@ -21,7 +21,7 @@ export class WorkspaceLoader {
 
         const workspaceStore = new WorkspaceFileStore(this.fileSystem, workspacePath)
         const folderStore = new SQLiteFolderStore(database.context)
-        const folderPathResolver = new FolderPathResolver(await folderStore.getRootFolders().then(folders => {
+        const folderPathResolver = new FolderPathResolver(await folderStore.getAll().then(folders => {
             const map = new Map<string, Folder>()
             for(const folder of folders) map.set(folder.id, folder)
             return map

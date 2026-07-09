@@ -22,8 +22,11 @@ export const api = {
         getRootFolders(): Promise<FolderInfo[]> {
             return ipcRenderer.invoke(IPCChannels.explorer.getRootFolders)
         },
-        createFolder(): Promise<FolderInfo> {
-            return ipcRenderer.invoke(IPCChannels.explorer.createFolder)
+        getFolders(): Promise<FolderInfo[]> {
+            return ipcRenderer.invoke(IPCChannels.explorer.getFolders)
+        },
+        createFolder(parentID: string | null): Promise<FolderInfo> {
+            return ipcRenderer.invoke(IPCChannels.explorer.createFolder, parentID)
         },
         renameFolder(folderID: string, name: string): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.explorer.renameFolder, folderID, name)

@@ -43,6 +43,10 @@ export class FolderService {
         return await this.folderStore.getRootFolders()
     }
 
+    public async getAll(): Promise<Folder[]> {
+        return await this.folderStore.getAll()
+    }
+
     public async rename(context: OperationContext, folderID: string, name: string): Promise<void> {
         const folder = await this.getFolderOrThrow(folderID)
         const prev = folder.clone()

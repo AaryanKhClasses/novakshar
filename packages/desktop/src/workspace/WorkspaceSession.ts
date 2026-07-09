@@ -21,6 +21,10 @@ export class WorkspaceSession {
         return this.folderService.getChildren(parentID)
     }
 
+    public async getAllFolders(): Promise<Folder[]> {
+        return this.folderService.getAll()
+    }
+
     public async getDocuments(folderID: string | null): Promise<Document[]> {
         return this.documentService.getByFolder(folderID)
     }

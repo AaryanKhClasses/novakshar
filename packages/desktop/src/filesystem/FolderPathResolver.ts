@@ -16,4 +16,16 @@ export class FolderPathResolver {
         }
         return path.join(...parts)
     }
+
+    public add(folder: Folder): void {
+        this.folders.set(folder.id, folder)
+    }
+
+    public update(folder: Folder): void {
+        this.folders.set(folder.id, folder)
+    }
+
+    public remove(folderID: string): void {
+        this.folders.delete(folderID)
+    }
 }

@@ -12,6 +12,7 @@ export class DesktopFolderFileStore implements IFolderFileStore {
     public async create(folder: Folder): Promise<void> {
         const relative = this.resolver.resolve(folder)
         await this.fileSystem.createDirectory(path.join(this.workspaceRoot, Constants.NotesFolder, relative))
+        this.resolver.add(folder)
     }
 
     public async update(prev: Folder, current: Folder): Promise<void> {
@@ -22,10 +23,12 @@ export class DesktopFolderFileStore implements IFolderFileStore {
             path.join(this.workspaceRoot, Constants.NotesFolder, oldRelative),
             path.join(this.workspaceRoot, Constants.NotesFolder, newRelative)
         )
+        this.resolver.update(current)
     }
 
     public async delete(folder: Folder): Promise<void> {
         const relative = this.resolver.resolve(folder)
         await this.fileSystem.deleteDirectory(path.join(this.workspaceRoot, Constants.NotesFolder, relative))
+        this.resolver.remove(folder.id)
     }
 }
