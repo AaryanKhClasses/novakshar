@@ -19,7 +19,9 @@ declare global {
                 createFolder(parentID: string | null): Promise<FolderInfo>
                 createDocument(folderID: string | null): Promise<DocumentInfo>
                 renameFolder(folderID: string, name: string): Promise<void>
+                renameDocument(documentID: string, title: string): Promise<void>
                 deleteFolder(folderID: string): Promise<void>
+                deleteDocument(documentID: string): Promise<void>
             }
         }
     }

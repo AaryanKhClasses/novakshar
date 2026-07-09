@@ -3,9 +3,10 @@ import { FolderInfo } from '@shared/folder'
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
 
 export interface ExplorerContextMenuState {
-    folderID: string
+    id: string
     x: number
     y: number
+    type: 'folder' | 'document'
 }
 
 export interface ExplorerEditingState {
@@ -26,12 +27,14 @@ interface ExplorerContextValue {
     createFolder(): Promise<void>
     createDocument(): Promise<void>
     renameFolder(folderID: string, name: string): Promise<void>
+    renameDocument(documentID: string, title: string): Promise<void>
     deleteFolder(folderID: string): Promise<void>
+    deleteDocument(documentID: string): Promise<void>
     selectFolder(folderID: string | null): Promise<void>
     selectDocument(documentID: string | null): void
-    showContextMenu(folderID: string, x: number, y: number): void
+    showContextMenu(id: string, x: number, y: number, type: 'folder' | 'document'): void
     hideContextMenu(): void
-    beginRename(folderID: string): void
+    beginRename(id: string, type: 'folder' | 'document'): void
     updateEditingValue(value: string): void
     commitRename(): Promise<void>
     cancelRename(): void
@@ -76,31 +79,49 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         await refresh()
     }
 
+    const renameDocument = async(documentID: string, title: string) => {
+        await window.novakshar.explorer.renameDocument(documentID, title)
+        await refresh()
+    }
+
     const deleteFolder = async(folderID: string) => {
         await window.novakshar.explorer.deleteFolder(folderID)
         await refresh()
     }
 
+    const deleteDocument = async(documentID: string) => {
+        await window.novakshar.explorer.deleteDocument(documentID)
+        await refresh()
+    }
+
     const selectFolder = async(folderID: string | null) => {
         setSelectedFolderID(folderID)
+        setSelectedDocumentID(null)
     }
 
     const selectDocument = (documentID: string | null) => {
         setSelectedDocumentID(documentID)
+        setSelectedFolderID(null)
     }
 
-    const showContextMenu = (folderID: string, x: number, y: number) => {
-        setContextMenu({ folderID, x, y })
+    const showContextMenu = (id: string, x: number, y: number, type: 'folder' | 'document') => {
+        setContextMenu({ id, x, y, type })
     }
 
     const hideContextMenu = () => {
         setContextMenu(null)
     }
 
-    const beginRename = (folderID: string) => {
-        const folder = folders.find(f => f.id === folderID)
-        if(!folder) return
-        setEditing({ id: folder.id, value: folder.name, isNew: false, type: 'folder' })
+    const beginRename = (id: string, type: 'folder' | 'document') => {
+        if(type === 'folder') {
+            const folder = folders.find(f => f.id === id)
+            if(!folder) return
+            setEditing({ id: folder.id, value: folder.name, isNew: false, type: 'folder' })
+        } else {
+            const document = documents.find(d => d.id === id)
+            if(!document) return
+            setEditing({ id: document.id, value: document.title, isNew: false, type: 'document' })
+        }
     }
 
     const updateEditingValue = (value: string) => {
@@ -109,7 +130,8 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
     }
 
     const cancelRename = () => {
-        if(editing?.isNew) deleteFolder(editing.id)
+        if(editing?.isNew && editing.type === 'folder') deleteFolder(editing.id)
+        if(editing?.isNew && editing.type === 'document') deleteDocument(editing.id)
         setEditing(null)
     }
 
@@ -120,7 +142,8 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
             cancelRename()
             return
         }
-        await renameFolder(editing.id, name)
+        if(editing.type === 'folder') await renameFolder(editing.id, name)
+        if(editing.type === 'document') await renameDocument(editing.id, name)
         setEditing(null)
     }
 
@@ -139,7 +162,9 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         createFolder,
         createDocument,
         renameFolder,
+        renameDocument,
         deleteFolder,
+        deleteDocument,
         selectFolder,
         selectDocument,
         showContextMenu,

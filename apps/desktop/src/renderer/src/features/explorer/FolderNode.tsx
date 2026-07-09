@@ -25,8 +25,8 @@ export function FolderNode({ folder, folders }: Props) {
             }} onContextMenu={e => {
                 e.preventDefault()
                 selectFolder(folder.id)
-                showContextMenu(folder.id, e.clientX, e.clientY)
-            }} className={`cursor-pointer items-center gap-1 rounded-xl px-1 py-0.5 select-none transition duration-300 ease-in-out ${selectedFolderID === folder.id ? 'bg-blue-600 text-white' : 'hover:bg-neutral-700 hover:text-white'}`}
+                showContextMenu(folder.id, e.clientX, e.clientY, 'folder')
+            }} className={`cursor-pointer items-center flex gap-2 px-2 py-1 select-none animate ${selectedFolderID === folder.id ? 'bg-primary-500' : 'hover:bg-surface-alt'}`}
         >
             {children.length > 0 ? <span>{expanded ? <FontAwesomeIcon icon={faFolderOpen} /> : <FontAwesomeIcon icon={faFolder} />}</span> : <FontAwesomeIcon icon={faFolder} />}
             {editing?.id === folder.id ? <input
@@ -39,12 +39,14 @@ export function FolderNode({ folder, folders }: Props) {
                     if(e.key === 'Enter') commitRename()
                     if(e.key === 'Escape') cancelRename()
                 }}
-                className="rounded-xl border border-blue-500 bg-neutral-900 px-1 outline-none"
+                className="border border-tonal-alt bg-primary-500 px-2 py-1 outline-none ml-2"
             ></input> : <span>{folder.name}</span>}
         </div>
         {expanded && children.length > 0 && <div className="ml-2">
             {folderChildren.map(child => <FolderNode key={child.id} folder={child} folders={folders} />)}
         </div>}
-        {expanded && folderDocuments.map(document => <DocumentNode key={document.id} document={document} />)}
+        {expanded && <div className="ml-2">
+            {folderDocuments.map(document => <DocumentNode key={document.id} document={document} />)}
+        </div>}
     </div>
 }

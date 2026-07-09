@@ -38,8 +38,14 @@ export const api = {
         renameFolder(folderID: string, name: string): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.explorer.renameFolder, folderID, name)
         },
+        renameDocument(documentID: string, title: string): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.explorer.renameDocument, documentID, title)
+        },
         deleteFolder(folderID: string): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.explorer.deleteFolder, folderID)
+        },
+        deleteDocument(documentID: string): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.explorer.deleteDocument, documentID)
         }
     }
 }

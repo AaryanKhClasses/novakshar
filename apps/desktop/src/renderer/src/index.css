@@ -1,1 +1,43 @@
 @import "tailwindcss";
+
+:root {
+    --primary-500: #1abc9c;
+    --primary-400: #47c3a6;
+    --primary-300: #62caaf;
+    --primary-200: #7ad1b9;
+    --primary-100: #8fd8c3;
+    --primary-50: #a3decc;
+    --surface: #121212;
+    --surface-alt: #4f4f4f;
+    --text: #fff;
+    --text-alt: #f2f2f2;
+    --tonal: #18201e;
+    --tonal-alt: #2b3331;
+    --success: #7dff95;
+    --warning: #ffbc5e;
+    --danger: #ff8080;
+    --info: #87d1ff;
+}
+
+@theme inline {
+    --color-primary-500: var(--primary-500);
+    --color-primary-400: var(--primary-400);
+    --color-primary-300: var(--primary-300);
+    --color-primary-200: var(--primary-200);
+    --color-primary-100: var(--primary-100);
+    --color-primary-50: var(--primary-50);
+    --color-surface: var(--surface);
+    --color-surface-alt: var(--surface-alt);
+    --color-text: var(--text);
+    --color-text-alt: var(--text-alt);
+    --color-tonal: var(--tonal);
+    --color-tonal-alt: var(--tonal-alt);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-danger: var(--danger);
+    --color-info: var(--info);
+}
+
+.animate {
+    @apply transition duration-300 ease-in-out
+}

@@ -120,7 +120,7 @@ export class ApplicationHost {
 
         const context = { timestamp: new Date() }
         const folder = folderID ? await this.session.folderService.get(folderID) : null
-        const relativePath = folder ? `${await this.session.folderPathResolver.resolve(folder)}/Untitled.md` : 'Untitled.md'
+        const relativePath = folder ? `${this.session.folderPathResolver.resolve(folder)}/Untitled.md` : 'Untitled.md'
         const document = await this.session.documentService.create(context, 'Untitled', relativePath, folderID)
         return {
             id: document.id,
@@ -128,6 +128,30 @@ export class ApplicationHost {
             folderID: document.folderID ?? null,
             favorite: document.favorite
         }
+    }
+
+    public async renameDocument(documentID: string, title: string): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+
+        const document = await this.session.documentService.get(documentID)
+        if(!document) throw new Error(`Document with ID ${documentID} not found`)
+
+        let newRelativePath: string
+        if(document.folderID) {
+            const folder = await this.session.folderService.get(document.folderID)
+            if(!folder) throw new Error(`Folder with ID ${document.folderID} not found`)
+            const folderPath = this.session.folderPathResolver.resolve(folder)
+            newRelativePath = `${folderPath}/${title}.md`
+        } else newRelativePath = `${title}.md`
+
+        const context = { timestamp: new Date() }
+        await this.session.documentService.rename(context, documentID, title, newRelativePath)
+    }
+
+    public async deleteDocument(documentID: string): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+        const context = { timestamp: new Date() }
+        await this.session.documentService.delete(context, documentID)
     }
 
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {

@@ -12,6 +12,8 @@ export const IPCChannels = {
         createFolder: 'explorer:createFolder',
         createDocument: 'explorer:createDocument',
         renameFolder: 'explorer:renameFolder',
-        deleteFolder: 'explorer:deleteFolder'
+        renameDocument: 'explorer:renameDocument',
+        deleteFolder: 'explorer:deleteFolder',
+        deleteDocument: 'explorer:deleteDocument'
     }
 }

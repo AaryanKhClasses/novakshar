@@ -1,10 +1,31 @@
 import { faFile } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useExplorer } from '@renderer/providers'
 import { DocumentInfo } from '@shared/document'
 
 export function DocumentNode({ document }: { document: DocumentInfo }) {
-    return <div className="ml-2 cursor-pointer items-center gap-1 rounded-xl px-1 py-0.5 select-none transition duration-300 ease-in-out hover:bg-neutral-700 hover:text-white">
+    const { selectedDocumentID, editing, updateEditingValue, commitRename, cancelRename, selectDocument, showContextMenu } = useExplorer()
+
+    return <div onClick={e => {
+                e.stopPropagation()
+                selectDocument(document.id)
+            }} onContextMenu={e => {
+                e.preventDefault()
+                selectDocument(document.id)
+                showContextMenu(document.id, e.clientX, e.clientY, 'document')
+            }} className={`flex cursor-pointer items-center gap-2 px-2 py-1 select-none animate ${selectedDocumentID === document.id ? 'bg-primary-500' : 'hover:bg-surface-alt'}`}>
         <span><FontAwesomeIcon icon={faFile} /></span>
-        <span>{document.title}</span>
+        {editing?.id === document.id ? <input
+            autoFocus
+            autoComplete="off"
+            value={editing.value}
+            onChange={e => updateEditingValue(e.target.value)}
+            onBlur={commitRename}
+            onKeyDown={e => {
+                if(e.key === 'Enter') commitRename()
+                if(e.key === 'Escape') cancelRename()
+            }}
+            className="border border-tonal-alt bg-primary-500 px-2 py-1 outline-none"
+        ></input> : <span>{document.title}</span>}
     </div>
 }
