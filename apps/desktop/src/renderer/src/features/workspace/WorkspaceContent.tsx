@@ -1,11 +1,8 @@
-import { WorkspaceContext } from '@renderer/providers'
-import { useContext } from 'react'
+import { useWorkspace } from '@renderer/providers'
 import { EditorPane, WelcomeScreen } from '..'
 
 export function WorkspaceContent() {
-    const workspace = useContext(WorkspaceContext)
-    if(!workspace) throw new Error('WorkspaceContext is not available')
-
-    if(!workspace.isOpen) return <WelcomeScreen />
+    const { isOpen } = useWorkspace()
+    if(!isOpen) return <WelcomeScreen />
     return <EditorPane />
 }

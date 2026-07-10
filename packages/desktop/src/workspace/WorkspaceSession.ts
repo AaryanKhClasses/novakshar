@@ -1,5 +1,6 @@
-import { Document, DocumentService, Folder, FolderService, Workspace, WorkspaceManager } from '@novakshar/core'
-import { FolderPathResolver } from '../index.js'
+import { Constants, Document, DocumentService, Folder, FolderService, Workspace, WorkspaceManager } from '@novakshar/core'
+import { DesktopFileSystem, FolderPathResolver } from '../index.js'
+import path from 'node:path'
 
 export class WorkspaceSession {
     constructor(
@@ -8,6 +9,7 @@ export class WorkspaceSession {
         public readonly documentService: DocumentService,
         public readonly folderService: FolderService,
         public readonly folderPathResolver: FolderPathResolver,
+        private readonly fileSystem: DesktopFileSystem,
         private readonly onDispose?: () => Promise<void> | void
     ) { }
 
@@ -33,5 +35,17 @@ export class WorkspaceSession {
 
     public async getAllDocuments(): Promise<Document[]> {
         return this.documentService.getAll()
+    }
+
+    public async readDocument(documentID: string): Promise<any> {
+        const document = await this.documentService.get(documentID)
+        if(!document) throw new Error(`Document with ID ${documentID} not found`)
+
+        const markdown = await this.fileSystem.readFile(path.join(this.workspace.rootPath, Constants.NotesFolder, document.relativePath))
+        return {
+            id: document.id,
+            title: document.title,
+            markdown: markdown
+        }
     }
 }

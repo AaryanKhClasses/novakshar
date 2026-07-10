@@ -1,5 +1,6 @@
 import { IPCChannels } from '@shared/channels'
 import { DocumentInfo } from '@shared/document'
+import { OpenDocumentInfo } from '@shared/editor'
 import { FolderInfo } from '@shared/folder'
 import { WorkspaceInfo } from '@shared/workspace'
 import { ipcRenderer } from 'electron'
@@ -14,6 +15,9 @@ export const api = {
         },
         open(): Promise<WorkspaceInfo | null> {
             return ipcRenderer.invoke(IPCChannels.workspace.open)
+        },
+        getCurrent(): Promise<WorkspaceInfo | null> {
+            return ipcRenderer.invoke(IPCChannels.workspace.getCurrent)
         },
         close(): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.workspace.close)
@@ -46,6 +50,11 @@ export const api = {
         },
         deleteDocument(documentID: string): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.explorer.deleteDocument, documentID)
+        }
+    },
+    editor: {
+        open(documentID: string): Promise<OpenDocumentInfo> {
+            return ipcRenderer.invoke(IPCChannels.editor.open, documentID)
         }
     }
 }

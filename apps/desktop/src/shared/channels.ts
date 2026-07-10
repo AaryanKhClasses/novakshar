@@ -3,6 +3,7 @@ export const IPCChannels = {
         ping: 'workspace:ping',
         create: 'workspace:create',
         open: 'workspace:open',
+        getCurrent: 'workspace:getCurrent',
         close: 'workspace:close'
     },
     explorer: {
@@ -15,5 +16,8 @@ export const IPCChannels = {
         renameDocument: 'explorer:renameDocument',
         deleteFolder: 'explorer:deleteFolder',
         deleteDocument: 'explorer:deleteDocument'
+    },
+    editor: {
+        open: 'editor:open'
     }
 }

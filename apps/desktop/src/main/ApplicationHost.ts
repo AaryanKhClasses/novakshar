@@ -4,6 +4,7 @@ import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
 import { FolderInfo } from '@shared/folder'
 import { DocumentInfo } from '@shared/document'
+import { OpenDocumentInfo } from '@shared/editor'
 
 export class ApplicationHost {
     private readonly bootstrap = new DesktopBootstrap()
@@ -42,6 +43,14 @@ export class ApplicationHost {
             state.lastWorkspace = null
             await this.state.save(state)
             return null
+        }
+    }
+
+    public async getWorkspace(): Promise<WorkspaceInfo | null> {
+        if(!this.session) return null
+        return {
+            name: this.session.workspace.name,
+            path: this.session.workspace.rootPath
         }
     }
 
@@ -152,6 +161,11 @@ export class ApplicationHost {
         if(!this.session) throw new Error('No workspace is open')
         const context = { timestamp: new Date() }
         await this.session.documentService.delete(context, documentID)
+    }
+
+    public async openDocument(documentID: string): Promise<OpenDocumentInfo> {
+        if(!this.session) throw new Error('No workspace is open')
+        return this.session.readDocument(documentID)
     }
 
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {

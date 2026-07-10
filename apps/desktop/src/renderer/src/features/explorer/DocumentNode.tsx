@@ -1,14 +1,16 @@
 import { faFile } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useExplorer } from '@renderer/providers'
+import { useEditor, useExplorer } from '@renderer/providers'
 import { DocumentInfo } from '@shared/document'
 
 export function DocumentNode({ document }: { document: DocumentInfo }) {
     const { selectedDocumentID, editing, updateEditingValue, commitRename, cancelRename, selectDocument, showContextMenu } = useExplorer()
+    const { openDocument } = useEditor()
 
     return <div onClick={e => {
                 e.stopPropagation()
                 selectDocument(document.id)
+                openDocument(document.id)
             }} onContextMenu={e => {
                 e.preventDefault()
                 selectDocument(document.id)

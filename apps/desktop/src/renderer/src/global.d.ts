@@ -10,6 +10,7 @@ declare global {
                 ping(): Promise<string>
                 create(): Promise<WorkspaceInfo | null>
                 open(): Promise<WorkspaceInfo | null>
+                getCurrent(): Promise<WorkspaceInfo | null>
                 close(): Promise<void>
             },
             explorer: {
@@ -22,6 +23,9 @@ declare global {
                 renameDocument(documentID: string, title: string): Promise<void>
                 deleteFolder(folderID: string): Promise<void>
                 deleteDocument(documentID: string): Promise<void>
+            },
+            editor: {
+                open(documentID: string): Promise<OpenDocumentInfo>
             }
         }
     }

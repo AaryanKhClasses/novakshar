@@ -38,6 +38,6 @@ export class WorkspaceLoader {
         const workspace = await workspaceManager.get()
         if(!workspace) throw new Error('Workspace not found')
 
-        return new WorkspaceSession(workspace, workspaceManager, documentService, folderService, folderPathResolver, async() => database.close())
+        return new WorkspaceSession(workspace, workspaceManager, documentService, folderService, folderPathResolver, this.fileSystem, async() => database.close())
     }
 }
