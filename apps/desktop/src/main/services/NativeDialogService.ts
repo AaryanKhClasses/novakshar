@@ -22,4 +22,21 @@ export class NativeDialogService {
         if(result.canceled) return null
         return result.filePaths[0] ?? null
     }
+
+    public async showUnsavedChanges(documentName: string): Promise<'save' | 'discard' | 'cancel'> {
+        const result = await dialog.showMessageBox(this.window, {
+            type: 'warning',
+            title: 'Unsaved Changes',
+            message: `"${documentName}" has unsaved changes.`,
+            detail: 'Do you want to save your changes before closing?',
+            buttons: ['Save', 'Discard', 'Cancel'],
+            defaultId: 0,
+            cancelId: 2
+        })
+        switch(result.response) {
+            case 0: return 'save'
+            case 1: return 'discard'
+            default: return 'cancel'
+        }
+    }
 }

@@ -19,6 +19,7 @@ export const IPCChannels = {
     },
     editor: {
         open: 'editor:open',
-        save: 'editor:save'
+        save: 'editor:save',
+        confirmClose: 'editor:confirmClose'
     }
 }

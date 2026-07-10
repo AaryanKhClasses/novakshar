@@ -14,7 +14,7 @@ export class DesktopDocumentFileStore implements IDocumentFileStore {
     public async create(relativePath: string, title: string): Promise<void> {
         const absolutePath = this.resolve(relativePath)
         await this.fileSystem.createDirectory(path.dirname(absolutePath))
-        await this.fileSystem.writeFile(absolutePath, `${title}\n`)
+        await this.fileSystem.writeFile(absolutePath, `\n`)
     }
     
     public async move(oldRelativePath: string, newRelativePath: string): Promise<void> {

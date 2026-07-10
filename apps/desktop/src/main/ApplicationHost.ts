@@ -173,6 +173,10 @@ export class ApplicationHost {
         await this.session.writeDocument(documentID, markdown)
     }
 
+    public async confirmCloseDocument(title: string): Promise<'save' | 'discard' | 'cancel'> {
+        return this.dialog.showUnsavedChanges(title)
+    }
+
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {
         await this.closeWorkspace()
         this.session = await this.bootstrap.openWorkspace(path)

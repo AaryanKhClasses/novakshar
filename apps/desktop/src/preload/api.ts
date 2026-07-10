@@ -58,6 +58,9 @@ export const api = {
         },
         save(documentID: string, markdown: string): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.editor.save, documentID, markdown)
+        },
+        confirmClose(title: string): Promise<'save' | 'discard' | 'cancel'> {
+            return ipcRenderer.invoke(IPCChannels.editor.confirmClose, title)
         }
     }
 }

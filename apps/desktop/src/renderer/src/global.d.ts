@@ -27,6 +27,7 @@ declare global {
             editor: {
                 open(documentID: string): Promise<OpenDocumentInfo>
                 save(documentID: string, markdown: string): Promise<void>
+                confirmClose(title: string): Promise<'save' | 'discard' | 'cancel'>
             }
         }
     }

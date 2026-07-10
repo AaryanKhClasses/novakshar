@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
 
 interface EditorContextValue {
     documents: readonly EditorDocumentState[]
@@ -6,9 +6,11 @@ interface EditorContextValue {
     activeDocumentID: string | null
     openDocument(documentID: string): Promise<void>
     activateDocument(documentID: string): void
-    closeDocument(documentID: string): void
+    closeDocument(documentID: string): Promise<boolean>
     updateMarkdown(markdown: string): void
     saveDocument(): Promise<void>
+    nextTab(): void
+    previousTab(): void
 }
 
 interface EditorDocumentState {
@@ -23,6 +25,7 @@ const EditorContext = createContext<EditorContextValue | null>(null)
 export function EditorProvider({ children }: PropsWithChildren) {
     const [documents, setDocuments] = useState<EditorDocumentState[]>([])
     const [activeDocumentID, setActiveDocumentID] = useState<string | null>(null)
+    const autosaveTimer = useRef<number | null>(null)
 
     const activeDocument = documents.find(d => d.id === activeDocumentID) || null
 
@@ -44,7 +47,14 @@ export function EditorProvider({ children }: PropsWithChildren) {
         setActiveDocumentID(documentID)
     }
 
-    const closeDocument = (documentID: string) => {
+    const closeDocument = async(documentID: string) => {
+        const document = documents.find(d => d.id === documentID)
+        if(!document) return false
+        if(document.dirty) {
+            const result = await window.novakshar.editor.confirmClose(document.title)
+            if(result === 'cancel') return false
+            if(result === 'save') await performSave(document)
+        }
         setDocuments(prev => {
             const index = prev.findIndex(d => d.id === documentID)
             if(index === -1) return prev
@@ -55,25 +65,64 @@ export function EditorProvider({ children }: PropsWithChildren) {
             }
             return remaining
         })
+        return true
     }
 
     const updateMarkdown = (markdown: string) => {
         setDocuments(prev => prev.map(d => {
             if(d.id !== activeDocumentID) return d
+            if(d.markdown === markdown) return d
             return { ...d, markdown, dirty: true }
         }))
     }
 
     const saveDocument = async() => {
-        const document = activeDocument
-        if(!document) return
+        if(!activeDocument) return
+        await performSave(activeDocument)
+        if(autosaveTimer.current) {
+            clearTimeout(autosaveTimer.current)
+            autosaveTimer.current = null
+        }
+    }
+
+    const nextTab = () => {
+        if(documents.length <= 1) return
+        const index = documents.findIndex(d => d.id === activeDocumentID)
+        const nextIndex = (index + 1) % documents.length
+        setActiveDocumentID(documents[nextIndex].id)
+    }
+
+    const previousTab = () => {
+        if(documents.length <= 1) return
+        const index = documents.findIndex(d => d.id === activeDocumentID)
+        const prevIndex = (index - 1 + documents.length) % documents.length
+        setActiveDocumentID(documents[prevIndex].id)
+    }
+
+    const performSave = async(document: EditorDocumentState) => {
         if(!document.dirty) return
         await window.novakshar.editor.save(document.id, document.markdown)
         setDocuments(prev => prev.map(d => {
-            if(d.id !== activeDocumentID) return d
+            if(d.id !== document.id) return d
             return { ...d, dirty: false }
         }))
     }
+
+    useEffect(() => {
+        if(!activeDocument) return
+        if(!activeDocument.dirty) return
+        if(autosaveTimer.current) clearTimeout(autosaveTimer.current)
+        autosaveTimer.current = window.setTimeout(() => performSave(activeDocument), 2000)
+        return () => {
+            if(autosaveTimer.current) clearTimeout(autosaveTimer.current)
+        }
+    }, [activeDocument?.id, activeDocument?.dirty, activeDocument?.markdown])
+
+    useEffect(() => {
+        return () => {
+            if(autosaveTimer.current) clearTimeout(autosaveTimer.current)
+        }
+    }, [])
 
     const value: EditorContextValue = {
         documents,
@@ -83,7 +132,9 @@ export function EditorProvider({ children }: PropsWithChildren) {
         activateDocument,
         closeDocument,
         updateMarkdown,
-        saveDocument
+        saveDocument,
+        nextTab,
+        previousTab
     }
 
     return <EditorContext.Provider value={value}>
