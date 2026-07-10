@@ -1,39 +1,89 @@
-import { OpenDocumentInfo } from '@shared/editor'
 import { createContext, PropsWithChildren, useContext, useState } from 'react'
 
 interface EditorContextValue {
-    document: OpenDocumentInfo | null
+    documents: readonly EditorDocumentState[]
+    activeDocument: EditorDocumentState | null
+    activeDocumentID: string | null
     openDocument(documentID: string): Promise<void>
-    closeDocument(): void
+    activateDocument(documentID: string): void
+    closeDocument(documentID: string): void
     updateMarkdown(markdown: string): void
+    saveDocument(): Promise<void>
+}
+
+interface EditorDocumentState {
+    id: string
+    title: string
+    markdown: string
+    dirty: boolean
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)
 
 export function EditorProvider({ children }: PropsWithChildren) {
-    const [document, setDocument] = useState<OpenDocumentInfo | null>(null)
+    const [documents, setDocuments] = useState<EditorDocumentState[]>([])
+    const [activeDocumentID, setActiveDocumentID] = useState<string | null>(null)
+
+    const activeDocument = documents.find(d => d.id === activeDocumentID) || null
 
     const openDocument = async(documentID: string) => {
-        const document = await window.novakshar.editor.open(documentID)
-        setDocument(document)
+        const existing = documents.find(d => d.id === documentID)
+        if(existing) {
+            setActiveDocumentID(documentID)
+            return
+        }
+        const opened = await window.novakshar.editor.open(documentID)
+        const state: EditorDocumentState = { ...opened, dirty: false }
+        setDocuments(prev => [...prev, state])
+        setActiveDocumentID(documentID)
     }
 
-    const closeDocument = () => {
-        setDocument(null)
+    const activateDocument = (documentID: string) => {
+        const existing = documents.find(d => d.id === documentID)
+        if(!existing) return
+        setActiveDocumentID(documentID)
     }
 
-    const updateMarkdown = (markdown: string) => {
-        setDocument(prev => {
-            if(!prev) return prev
-            return { ...prev, markdown, dirty: true }
+    const closeDocument = (documentID: string) => {
+        setDocuments(prev => {
+            const index = prev.findIndex(d => d.id === documentID)
+            if(index === -1) return prev
+            const remaining = prev.filter(d => d.id !== documentID)
+            if(activeDocumentID === documentID) {
+                const neighbour = prev[index + 1] || prev[index - 1]
+                setActiveDocumentID(neighbour?.id ?? null)
+            }
+            return remaining
         })
     }
 
+    const updateMarkdown = (markdown: string) => {
+        setDocuments(prev => prev.map(d => {
+            if(d.id !== activeDocumentID) return d
+            return { ...d, markdown, dirty: true }
+        }))
+    }
+
+    const saveDocument = async() => {
+        const document = activeDocument
+        if(!document) return
+        if(!document.dirty) return
+        await window.novakshar.editor.save(document.id, document.markdown)
+        setDocuments(prev => prev.map(d => {
+            if(d.id !== activeDocumentID) return d
+            return { ...d, dirty: false }
+        }))
+    }
+
     const value: EditorContextValue = {
-        document,
+        documents,
+        activeDocument,
+        activeDocumentID,
         openDocument,
+        activateDocument,
         closeDocument,
-        updateMarkdown
+        updateMarkdown,
+        saveDocument
     }
 
     return <EditorContext.Provider value={value}>

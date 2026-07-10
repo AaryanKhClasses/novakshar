@@ -55,6 +55,9 @@ export const api = {
     editor: {
         open(documentID: string): Promise<OpenDocumentInfo> {
             return ipcRenderer.invoke(IPCChannels.editor.open, documentID)
+        },
+        save(documentID: string, markdown: string): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.editor.save, documentID, markdown)
         }
     }
 }

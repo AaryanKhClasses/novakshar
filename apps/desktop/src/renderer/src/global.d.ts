@@ -26,6 +26,7 @@ declare global {
             },
             editor: {
                 open(documentID: string): Promise<OpenDocumentInfo>
+                save(documentID: string, markdown: string): Promise<void>
             }
         }
     }

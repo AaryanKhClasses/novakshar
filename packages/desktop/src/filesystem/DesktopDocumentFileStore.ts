@@ -36,6 +36,6 @@ export class DesktopDocumentFileStore implements IDocumentFileStore {
     }
     
     public async write(relativePath: string, content: string): Promise<void> {
-    await this.fileSystem.writeFile(this.resolve(relativePath), content)
+        await this.fileSystem.writeFile(this.resolve(relativePath), content)
     }
 }

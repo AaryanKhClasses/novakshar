@@ -168,6 +168,11 @@ export class ApplicationHost {
         return this.session.readDocument(documentID)
     }
 
+    public async saveDocument(documentID: string, markdown: string): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+        await this.session.writeDocument(documentID, markdown)
+    }
+
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {
         await this.closeWorkspace()
         this.session = await this.bootstrap.openWorkspace(path)

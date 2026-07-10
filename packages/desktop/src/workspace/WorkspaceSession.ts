@@ -48,4 +48,10 @@ export class WorkspaceSession {
             markdown: markdown
         }
     }
+
+    public async writeDocument(documentID: string, markdown: string): Promise<void> {
+        const document = await this.documentService.get(documentID)
+        if(!document) throw new Error(`Document with ID ${documentID} not found`)
+        await this.fileSystem.writeFile(path.join(this.workspace.rootPath, Constants.NotesFolder, document.relativePath), markdown)
+    }
 }

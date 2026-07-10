@@ -18,6 +18,7 @@ export const IPCChannels = {
         deleteDocument: 'explorer:deleteDocument'
     },
     editor: {
-        open: 'editor:open'
+        open: 'editor:open',
+        save: 'editor:save'
     }
 }
