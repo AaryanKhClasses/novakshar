@@ -28,6 +28,8 @@ declare global {
                 open(documentID: string): Promise<OpenDocumentInfo>
                 save(documentID: string, markdown: string): Promise<void>
                 confirmClose(title: string): Promise<'save' | 'discard' | 'cancel'>
+                saveSession(session: any): Promise<void>
+                loadSession(): Promise<any>
             }
         }
     }

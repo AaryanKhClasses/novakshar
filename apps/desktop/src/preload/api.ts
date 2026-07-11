@@ -61,6 +61,12 @@ export const api = {
         },
         confirmClose(title: string): Promise<'save' | 'discard' | 'cancel'> {
             return ipcRenderer.invoke(IPCChannels.editor.confirmClose, title)
+        },
+        saveSession(session: any): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.editor.saveSession, session)
+        },
+        loadSession(): Promise<any> {
+            return ipcRenderer.invoke(IPCChannels.editor.loadSession)
         }
     }
 }

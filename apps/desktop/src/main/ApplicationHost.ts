@@ -1,10 +1,10 @@
 import { DesktopBootstrap, WorkspaceSession } from '@novakshar/desktop'
+import { DocumentInfo } from '@shared/document'
+import { EditorSessionState, OpenDocumentInfo } from '@shared/editor'
+import { FolderInfo } from '@shared/folder'
 import { WorkspaceInfo } from '@shared/workspace'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
-import { FolderInfo } from '@shared/folder'
-import { DocumentInfo } from '@shared/document'
-import { OpenDocumentInfo } from '@shared/editor'
 
 export class ApplicationHost {
     private readonly bootstrap = new DesktopBootstrap()
@@ -175,6 +175,17 @@ export class ApplicationHost {
 
     public async confirmCloseDocument(title: string): Promise<'save' | 'discard' | 'cancel'> {
         return this.dialog.showUnsavedChanges(title)
+    }
+
+    public async saveEditorSession(session: EditorSessionState): Promise<void> {
+        const state = await this.state.load()
+        state.editor = session
+        await this.state.save(state)
+    }
+
+    public async loadEditorSession(): Promise<EditorSessionState> {
+        const state = await this.state.load()
+        return state.editor
     }
 
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {

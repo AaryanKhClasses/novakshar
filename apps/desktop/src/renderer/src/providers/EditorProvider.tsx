@@ -1,10 +1,13 @@
+import { calculateMarkdownStatistics } from '@renderer/utils/MarkdownStatistics'
+import { EditorSessionState } from '@shared/editor'
 import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
+import { useExplorer } from './ExplorerProvider'
 
 interface EditorContextValue {
     documents: readonly EditorDocumentState[]
     activeDocument: EditorDocumentState | null
     activeDocumentID: string | null
-    openDocument(documentID: string): Promise<void>
+    openDocument(documentID: string, activate?: boolean): Promise<void>
     activateDocument(documentID: string): void
     closeDocument(documentID: string): Promise<boolean>
     updateMarkdown(markdown: string): void
@@ -18,26 +21,43 @@ interface EditorDocumentState {
     title: string
     markdown: string
     dirty: boolean
+    statistics: EditorStatistics
+}
+
+interface EditorStatistics {
+    words: number
+    characters: number
+    lines: number
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)
 
 export function EditorProvider({ children }: PropsWithChildren) {
+    const { selectDocument } = useExplorer()
     const [documents, setDocuments] = useState<EditorDocumentState[]>([])
     const [activeDocumentID, setActiveDocumentID] = useState<string | null>(null)
     const autosaveTimer = useRef<number | null>(null)
+    const restored = useRef(false)
 
     const activeDocument = documents.find(d => d.id === activeDocumentID) || null
 
-    const openDocument = async(documentID: string) => {
+    const createSessionState = (): EditorSessionState => ({
+        openDocuments: [...new Set(documents.map(d => d.id))],
+        activeDocumentID
+    })
+
+    const openDocument = async(documentID: string, activate = true) => {
         const existing = documents.find(d => d.id === documentID)
         if(existing) {
-            setActiveDocumentID(documentID)
+            if(activate) setActiveDocumentID(documentID)
             return
         }
         const opened = await window.novakshar.editor.open(documentID)
-        const state: EditorDocumentState = { ...opened, dirty: false }
-        setDocuments(prev => [...prev, state])
+        const state: EditorDocumentState = { ...opened, dirty: false, statistics: calculateMarkdownStatistics(opened.markdown) }
+        setDocuments(prev => {
+            if(prev.some(d => d.id === documentID)) return prev
+            return [...prev, state]
+        })
         setActiveDocumentID(documentID)
     }
 
@@ -45,6 +65,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
         const existing = documents.find(d => d.id === documentID)
         if(!existing) return
         setActiveDocumentID(documentID)
+        selectDocument(documentID)
     }
 
     const closeDocument = async(documentID: string) => {
@@ -62,6 +83,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
             if(activeDocumentID === documentID) {
                 const neighbour = prev[index + 1] || prev[index - 1]
                 setActiveDocumentID(neighbour?.id ?? null)
+                selectDocument(neighbour?.id ?? null)
             }
             return remaining
         })
@@ -72,7 +94,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
         setDocuments(prev => prev.map(d => {
             if(d.id !== activeDocumentID) return d
             if(d.markdown === markdown) return d
-            return { ...d, markdown, dirty: true }
+            return { ...d, markdown, dirty: true, statistics: calculateMarkdownStatistics(markdown) }
         }))
     }
 
@@ -122,6 +144,27 @@ export function EditorProvider({ children }: PropsWithChildren) {
         return () => {
             if(autosaveTimer.current) clearTimeout(autosaveTimer.current)
         }
+    }, [])
+
+    useEffect(() => {
+        const handle = setTimeout(() => {
+            window.novakshar.editor.saveSession(createSessionState())
+        }, 250)
+        return () => clearTimeout(handle)
+    }, [documents, activeDocumentID])
+
+    useEffect(() => {
+        if(restored.current) return
+        restored.current = true
+        const restore = async() => {
+            const session = await window.novakshar.editor.loadSession()
+            for(const id of session.openDocuments) {
+                try { await openDocument(id, false) }
+                catch { }
+            }
+            if(session.activeDocumentID) setActiveDocumentID(session.activeDocumentID)
+        }
+        restore()
     }, [])
 
     const value: EditorContextValue = {

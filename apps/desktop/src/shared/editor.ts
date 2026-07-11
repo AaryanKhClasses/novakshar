@@ -4,3 +4,8 @@ export interface OpenDocumentInfo {
     markdown: string
     dirty: boolean
 }
+
+export interface EditorSessionState {
+    openDocuments: string[]
+    activeDocumentID: string | null
+}
