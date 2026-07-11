@@ -12,10 +12,16 @@ export function EditorPane() {
         markdownShortcutPlugin()
     ]
 
-    if(!activeDocument) return <div className="flex h-full items-center justify-center text-primary-500">
+    if(!activeDocument) return <div className="flex h-full items-center justify-center bg-tonal-alt text-2xl text-text-alt">
         Open a document to start editing
     </div>
-    return <div className="h-full overflow-auto p-6">
-        <MDXEditor key={activeDocument?.id} markdown={activeDocument?.markdown ?? ""} onChange={updateMarkdown} plugins={plugins} />
+    return <div className="prose prose-invert prose-p:my-0 prose-headings:mb-4 max-w-none h-full overflow-auto p-6 bg-tonal-alt text-text-alt">
+        <MDXEditor
+            contentEditableClassName='text-text-alt!'
+            key={activeDocument?.id}
+            markdown={activeDocument?.markdown ?? ""}
+            onChange={updateMarkdown}
+            plugins={plugins}
+        />
     </div>
 }

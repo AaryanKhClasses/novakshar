@@ -4,7 +4,7 @@ export function StatusBar() {
     const { activeDocument } = useEditor()
     const statistics = activeDocument?.statistics
 
-    return <div className="flex items-center justify-between border-t px-4 text-sm">
+    return <div className="flex items-center justify-between border-t px-4 text-sm bg-tonal-alt text-text-alt border-tonal">
         <div className="flex gap-6">
             <span>Markdown</span>
             <span>UTF-8</span>
