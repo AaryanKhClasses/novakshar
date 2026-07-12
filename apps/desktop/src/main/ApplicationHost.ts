@@ -119,6 +119,7 @@ export class ApplicationHost {
         return documents.map(d => ({
             id: d.id,
             title: d.title,
+            relativePath: d.relativePath,
             folderID: d.folderID ?? null,
             favorite: d.favorite
         }))

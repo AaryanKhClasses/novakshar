@@ -38,6 +38,7 @@ interface ExplorerContextValue {
     updateEditingValue(value: string): void
     commitRename(): Promise<void>
     cancelRename(): void
+    findDocument(documentID: string): DocumentInfo | undefined
 }
 
 const ExplorerContext = createContext<ExplorerContextValue | null>(null)
@@ -147,6 +148,10 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         setEditing(null)
     }
 
+    const findDocument = (documentID: string): DocumentInfo | undefined => {
+        return documents.find(d => d.id === documentID)
+    }
+
     useEffect(() => {
         refresh()
     }, [])
@@ -172,7 +177,8 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         beginRename,
         updateEditingValue,
         cancelRename,
-        commitRename
+        commitRename,
+        findDocument
     }
 
     return <ExplorerContext.Provider value={value}>

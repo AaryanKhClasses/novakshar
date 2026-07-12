@@ -1,5 +1,6 @@
 export * from './ApplicationProvider'
 export * from './EditorProvider'
 export * from './ExplorerProvider'
+export * from './OverlayProvider'
 export * from './ShortcutProvider'
 export * from './WorkspaceProvider'
