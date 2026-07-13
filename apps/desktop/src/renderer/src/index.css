@@ -14,6 +14,7 @@
     --bg-explorer-hover: #1c2128;
     --bg-tab-selected: #21262d;
     --bg-tab-hover: #1c2128;
+    --bg-editor-toolbar: #21262d;
 
     --text: #e6edf3;
     --text-alt: #8b949e;
@@ -44,6 +45,7 @@
     --color-explorer-hover: var(--bg-explorer-hover);
     --color-tab-selected: var(--bg-tab-selected);
     --color-tab-hover: var(--bg-tab-hover);
+    --color-editor-toolbar: var(--bg-editor-toolbar);
     --color-text: var(--text);
     --color-text-alt: var(--text-alt);
     --color-text-muted: var(--text-muted);
@@ -63,6 +65,14 @@
     @apply transition duration-300 ease-in-out
 }
 
+.mdx-editor {
+    @apply h-full w-full bg-editor text-text relative
+}
+
+.editor-toolbar {
+    @apply absolute bg-editor-toolbar left-1/2 top-140 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-100
+}
+
 body {
     font-family: 'Inter', sans-serif;
 }
@@ -70,4 +80,8 @@ body {
 @font-face {
     font-family: 'Inter';
     src: url('Inter-VariableFont_opsz,wght.ttf');
+}
+
+::-webkit-scrollbar {
+    display: none;
 }

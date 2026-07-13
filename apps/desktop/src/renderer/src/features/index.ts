@@ -1,5 +1,6 @@
 export * from './editor/EditorOverlay'
 export * from './editor/EditorPane'
+export * from './editor/EditorToolbar'
 export * from './editor/Tabs'
 
 export * from './explorer/DocumentNode'
