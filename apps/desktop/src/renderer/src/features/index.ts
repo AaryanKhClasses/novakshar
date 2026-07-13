@@ -8,6 +8,7 @@ export * from './explorer/ExplorerPane'
 export * from './explorer/ExplorerTree'
 export * from './explorer/FolderNode'
 
+export * from './overlays/FindOverlay'
 export * from './overlays/QuickOpenOverlay'
 
 export * from './workspace/WorkspaceContent'

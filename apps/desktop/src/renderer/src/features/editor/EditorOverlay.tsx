@@ -1,9 +1,10 @@
 import { OverlayType, useOverlay } from '@renderer/providers'
-import { QuickOpenOverlay } from '..'
+import { FindOverlay, QuickOpenOverlay } from '..'
 
 export function EditorOverlay() {
     const { activeOverlay } = useOverlay()
     return <>
         {activeOverlay === OverlayType.QuickOpen && <QuickOpenOverlay />}
+        {activeOverlay === OverlayType.Find && <FindOverlay />}
     </>
 }

@@ -1,3 +1,4 @@
+import { RealmProvider } from '@mdxeditor/editor'
 import { AppFrame } from './layouts/AppFrame'
 import { ApplicationProvider, EditorProvider, ExplorerProvider, OverlayProvider, ShortcutProvider, WorkspaceProvider } from './providers'
 
@@ -6,11 +7,13 @@ export default function App() {
         <WorkspaceProvider>
             <ExplorerProvider>
                 <EditorProvider>
-                    <OverlayProvider>
-                        <ShortcutProvider>
-                            <AppFrame />
-                        </ShortcutProvider>
-                    </OverlayProvider>
+                    <RealmProvider>
+                        <OverlayProvider>
+                            <ShortcutProvider>
+                                <AppFrame />
+                            </ShortcutProvider>
+                        </OverlayProvider>
+                    </RealmProvider>
                 </EditorProvider>
             </ExplorerProvider>
         </WorkspaceProvider>

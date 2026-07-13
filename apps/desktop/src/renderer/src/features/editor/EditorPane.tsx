@@ -1,4 +1,4 @@
-import { headingsPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, thematicBreakPlugin } from '@mdxeditor/editor'
+import { headingsPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, searchPlugin, thematicBreakPlugin } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 import { useEditor } from '@renderer/providers'
 
@@ -9,7 +9,8 @@ export function EditorPane() {
         listsPlugin(),
         quotePlugin(),
         thematicBreakPlugin(),
-        markdownShortcutPlugin()
+        markdownShortcutPlugin(),
+        searchPlugin()
     ]
 
     if(!activeDocument) return <div className="flex h-full items-center justify-center bg-tonal-alt text-2xl text-text-alt">

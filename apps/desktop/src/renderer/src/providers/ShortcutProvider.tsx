@@ -27,7 +27,7 @@ export function ShortcutProvider({ children }: PropsWithChildren) {
             if(ctrl && key === 'p') performAction(overlay.toggleOverlay(OverlayType.QuickOpen))
             if(ctrl && key === 'f') performAction(overlay.toggleOverlay(OverlayType.Find))
             if(ctrl && key === 'g') performAction(overlay.toggleOverlay(OverlayType.GotoLine))
-            if(ctrl && key === 'h') performAction(overlay.toggleOverlay(OverlayType.Replace))
+            if(ctrl && key === 'h') performAction(overlay.toggleOverlay(OverlayType.Find, true))
             if(ctrl && shift && key === 'f') performAction(overlay.toggleOverlay(OverlayType.GlobalSearch))
         }
         window.addEventListener('keydown', handler)
