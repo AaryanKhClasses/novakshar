@@ -1,7 +1,7 @@
-import { FolderInfo } from '@shared/folder'
-import { FolderNode } from './FolderNode'
 import { DocumentInfo } from '@shared/document'
+import { FolderInfo } from '@shared/folder'
 import { DocumentNode } from './DocumentNode'
+import { FolderNode } from './FolderNode'
 
 export function ExplorerTree({ folders, documents }: { folders: FolderInfo[], documents: DocumentInfo[] }) {
     const roots = folders.filter(f => f.parentID === null)

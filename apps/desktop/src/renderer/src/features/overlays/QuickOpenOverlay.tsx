@@ -43,7 +43,7 @@ export function QuickOpenOverlay() {
         }
     }
 
-    return <div className="absolute p-2 top-10 z-50 left-1/2 w-175 -translate-x-1/2 rounded-xl border border-tonal-alt bg-tonal text-text-alt shadow-xl">
+    return <div className="absolute p-2 top-10 z-50 left-1/2 w-175 -translate-x-1/2 rounded-xl border border-border bg-explorer text-text-alt shadow-xl">
         <input
             autoFocus
             autoComplete="off"
@@ -51,9 +51,9 @@ export function QuickOpenOverlay() {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={async e => handleKeyDown(e)}
             placeholder="Search documents..."
-            className="w-full px-2 py-1 rounded border border-tonal-alt bg-tonal text-text-alt focus:outline-none focus:ring focus:ring-primary-500 animate"
+            className="w-full px-2 py-1 rounded border border-border-alt text-text focus:outline-none focus:ring focus:ring-border-focus animate"
         />
-        <div className="max-h-96 overflow-y-auto">
+        <div className="max-h-96 overflow-y-auto mt-2">
             {filteredDocuments.length > 0 ? filteredDocuments.map((d, i) => <div
                 key={d.id}
                 onClick={async () => {
@@ -61,7 +61,7 @@ export function QuickOpenOverlay() {
                     selectDocument(d.id)
                     hideOverlay()
                 }}
-                className={`cursor-pointer px-3 py-2 ${i === selectedIndex ? 'bg-primary-500 text-text-alt' : 'hover:bg-tonal-alt'}`}
+                className={`cursor-pointer px-3 py-2 my-1 rounded-xl animate ${i === selectedIndex ? 'bg-primary text-text-inverted' : 'hover:bg-explorer-hover hover:text-text'}`}
             >
                 <div>{d.title}</div>
                 <div className="text-xs opacity-70 line-clamp-1">{d.relativePath}</div>

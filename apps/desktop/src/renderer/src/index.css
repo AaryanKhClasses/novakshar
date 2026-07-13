@@ -2,37 +2,57 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-    --primary-500: #1abc9c;
-    --primary-400: #47c3a6;
-    --primary-300: #62caaf;
-    --primary-200: #7ad1b9;
-    --primary-100: #8fd8c3;
-    --primary-50: #a3decc;
-    --surface: #121212;
-    --surface-alt: #4f4f4f;
-    --text: #fff;
-    --text-alt: #f2f2f2;
-    --tonal: #18201e;
-    --tonal-alt: #2b3331;
-    --success: #7dff95;
-    --warning: #ffbc5e;
-    --danger: #ff8080;
-    --info: #87d1ff;
+    --bg-editor: #0d1117;
+    --bg-explorer: #161b22;
+    --bg-tab: #161b22;
+    --bg-title-bar: #161b22;
+    --bg-tool-bar: #161b22;
+    --bg-status-bar: #161b22;
+    --bg-overlay: rgba(0,0,0,0.6);
+
+    --bg-explorer-selected: #21262d;
+    --bg-explorer-hover: #1c2128;
+    --bg-tab-selected: #21262d;
+    --bg-tab-hover: #1c2128;
+
+    --text: #e6edf3;
+    --text-alt: #8b949e;
+    --text-muted: #6e7681;
+    --text-inverted: #0d1117;
+
+    --border: #30363d;
+    --border-alt: #21262d;
+    --border-focus: #58a6ff;
+
+    --primary: #58a6ff;
+    --secondary: #1f6feb;
+    --success: #3fb950;
+    --warning: #d29922;
+    --danger: #f85149;
+    --info: #39c5cf;
 }
 
 @theme inline {
-    --color-primary-500: var(--primary-500);
-    --color-primary-400: var(--primary-400);
-    --color-primary-300: var(--primary-300);
-    --color-primary-200: var(--primary-200);
-    --color-primary-100: var(--primary-100);
-    --color-primary-50: var(--primary-50);
-    --color-surface: var(--surface);
-    --color-surface-alt: var(--surface-alt);
+    --color-editor: var(--bg-editor);
+    --color-explorer: var(--bg-explorer);
+    --color-tab: var(--bg-tab);
+    --color-title-bar: var(--bg-title-bar);
+    --color-tool-bar: var(--bg-tool-bar);
+    --color-status-bar: var(--bg-status-bar);
+    --color-overlay: var(--bg-overlay);
+    --color-explorer-selected: var(--bg-explorer-selected);
+    --color-explorer-hover: var(--bg-explorer-hover);
+    --color-tab-selected: var(--bg-tab-selected);
+    --color-tab-hover: var(--bg-tab-hover);
     --color-text: var(--text);
     --color-text-alt: var(--text-alt);
-    --color-tonal: var(--tonal);
-    --color-tonal-alt: var(--tonal-alt);
+    --color-text-muted: var(--text-muted);
+    --color-text-inverted: var(--text-inverted);
+    --color-border: var(--border);
+    --color-border-alt: var(--border-alt);
+    --color-border-focus: var(--border-focus);
+    --color-primary: var(--primary);
+    --color-secondary: var(--secondary);
     --color-success: var(--success);
     --color-warning: var(--warning);
     --color-danger: var(--danger);
@@ -41,4 +61,13 @@
 
 .animate {
     @apply transition duration-300 ease-in-out
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('Inter-VariableFont_opsz,wght.ttf');
 }

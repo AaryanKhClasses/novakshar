@@ -6,7 +6,7 @@ export function ExplorerContextMenu() {
     if(!contextMenu) return null
     return <>
         <div className="fixed inset-0 z-40" onClick={hideContextMenu} />
-        <div className="fixed z-50 min-w-48 border border-surface bg-tonal-alt shadow shadow-surface" style={{ left: contextMenu.x, top: contextMenu.y }}>
+        <div className="fixed z-50 min-w-48 border border-border bg-explorer-selected shadow shadow-explorer-hover" style={{ left: contextMenu.x, top: contextMenu.y }}>
             {contextMenu.type === 'folder' && <>
                 <MenuItem label="New Folder" onClick={async() => {
                     hideContextMenu()
@@ -16,7 +16,7 @@ export function ExplorerContextMenu() {
                     hideContextMenu()
                     await createDocument()
                 }} />
-                <hr className="my-2 border-tonal-alt" />
+                <hr className="my-2 border-border" />
                 <MenuItem label="Rename Folder" onClick={async() => {
                     hideContextMenu()
                     beginRename(contextMenu.id, 'folder')
@@ -41,5 +41,5 @@ export function ExplorerContextMenu() {
 }
 
 function MenuItem({ label, onClick, className }: { label: string, onClick: () => void, className?: string }) {
-    return <button className={`${className || ''} flex w-full px-3 py-1.5 text-left text-white hover:bg-surface-alt cursor-pointer animate`} onClick={onClick}>{label}</button>
+    return <button className={`${className || ''} flex w-full px-3 py-1.5 text-left text-text-alt hover:text-text hover:bg-explorer-hover cursor-pointer animate`} onClick={onClick}>{label}</button>
 }

@@ -1,4 +1,5 @@
-import { DocumentInfo, FolderInfo } from '@shared/folder'
+import { DocumentInfo } from '@shared/document'
+import { FolderInfo } from '@shared/folder'
 import { WorkspaceInfo } from '@shared/workspace'
 
 export { }
