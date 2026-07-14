@@ -35,6 +35,15 @@ export const api = {
         },
         close(): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.workspace.close)
+        },
+        getRecents(): Promise<WorkspaceInfo[]> {
+            return ipcRenderer.invoke(IPCChannels.workspace.getRecents)
+        },
+        openRecent(path: string): Promise<WorkspaceInfo | null> {
+            return ipcRenderer.invoke(IPCChannels.workspace.openRecent, path)
+        },
+        removeRecent(path: string): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.workspace.removeRecent, path)
         }
     },
     explorer: {

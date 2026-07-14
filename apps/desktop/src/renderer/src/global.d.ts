@@ -19,6 +19,9 @@ declare global {
                 open(): Promise<WorkspaceInfo | null>
                 getCurrent(): Promise<WorkspaceInfo | null>
                 close(): Promise<void>
+                getRecents(): Promise<WorkspaceInfo[]>
+                openRecent(path: string): Promise<WorkspaceInfo | null>
+                removeRecent(path: string): Promise<void>
             },
             explorer: {
                 getRootFolders(): Promise<FolderInfo[]>

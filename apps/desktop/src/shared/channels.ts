@@ -10,7 +10,10 @@ export const IPCChannels = {
         create: 'workspace:create',
         open: 'workspace:open',
         getCurrent: 'workspace:getCurrent',
-        close: 'workspace:close'
+        close: 'workspace:close',
+        getRecents: 'workspace:getRecents',
+        openRecent: 'workspace:openRecent',
+        removeRecent: 'workspace:removeRecent'
     },
     explorer: {
         getRootFolders: 'explorer:getRootFolders',

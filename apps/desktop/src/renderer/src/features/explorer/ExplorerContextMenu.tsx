@@ -41,5 +41,5 @@ export function ExplorerContextMenu() {
 }
 
 function MenuItem({ label, onClick, className }: { label: string, onClick: () => void, className?: string }) {
-    return <button className={`${className || ''} flex w-full px-3 py-1.5 text-left text-text-alt hover:text-text hover:bg-explorer-hover cursor-pointer animate`} onClick={onClick}>{label}</button>
+    return <button className={`${className || ''} flex w-full px-3 py-1.5 text-left text-text-alt hover:text-text hover:bg-explorer-hover cursor-pointer animate focus:outline-none focus:bg-title-focus focus:text-text`} onClick={onClick}>{label}</button>
 }

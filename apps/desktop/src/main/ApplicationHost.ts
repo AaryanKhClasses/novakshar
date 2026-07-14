@@ -76,6 +76,24 @@ export class ApplicationHost {
         }
     }
 
+    public async getRecentWorkspaces(): Promise<WorkspaceInfo[]> {
+        const state = await this.state.load()
+        return state.recentWorkspaces.map(path => ({
+            path,
+            name: path.split(/[\\/]/).pop() ?? path ?? "Unknown Workspace"
+        }))
+    }
+
+    public async openRecentWorkspace(path: string): Promise<WorkspaceInfo | null> {
+        return await this.openWorkspaceAt(path)
+    }
+
+    public async removeRecentWorkspace(path: string): Promise<void> {
+        const state = await this.state.load()
+        state.recentWorkspaces = state.recentWorkspaces.filter(p => p !== path)
+        await this.state.save(state)
+    }
+
     public async closeWorkspace(): Promise<void> {
         if(!this.session) return
         await this.session.dispose()
@@ -243,6 +261,9 @@ export class ApplicationHost {
     private async saveState(path: string): Promise<void> {
         const state = await this.state.load()
         state.lastWorkspace = path
+        state.recentWorkspaces = state.recentWorkspaces.filter(p => p !== path)
+        state.recentWorkspaces.unshift(path)
+        if(state.recentWorkspaces.length > 10) state.recentWorkspaces = state.recentWorkspaces.slice(0, 10)
         await this.state.save(state)
     }
 }

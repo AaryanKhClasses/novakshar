@@ -17,7 +17,7 @@ interface MenuDefinition {
     items: MenuItem[]
 }
 
-type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace'
+type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace'
 
 interface MenuItemDefinition {
     label: string
@@ -39,7 +39,7 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
             { label: 'New Workspace', shortcut: 'Ctrl+Shift+N', action: 'createWorkspace' },
             { label: 'Open Workspace', shortcut: 'Ctrl+Shift+O', action: 'openWorkspace' },
             { label: 'New Document', shortcut: 'Ctrl+N', action: 'createDocument' },
-            { label: 'Open Document', shortcut: 'Ctrl+O', enabled: false },
+            { label: 'Quick Open', shortcut: 'Ctrl+P', action: 'quickOpenDocument' },
             { separator: true, label: '' },
             { label: 'Save', shortcut: 'Ctrl+S', action: 'saveDocument' },
             { label: 'Save As', shortcut: 'Ctrl+Shift+S', enabled: false },
@@ -104,7 +104,8 @@ export function TitleBar() {
             closeDocument: () => void closeDocument(activeDocumentID ?? ''),
             closeWindow: () => window.novakshar.window.close(),
             find: () => toggleOverlay(OverlayType.Find),
-            replace: () => toggleOverlay(OverlayType.Find, true)
+            replace: () => toggleOverlay(OverlayType.Find, true),
+            quickOpenDocument: () => toggleOverlay(OverlayType.QuickOpen)
         }
 
         return MENU_DEFINITIONS.map(menu => ({
@@ -129,9 +130,9 @@ export function TitleBar() {
         </div>
         <div className="flex items-center">
             {workspaceName && <span className="text-sm text-text-muted max-w-64 truncate mr-4">{workspaceName}</span>}
-            <button onClick={handleMinimize} className="no-drag h-9 w-9 cursor-pointer text-text-alt rounded hover:bg-title-hover hover:text-text animate"><FontAwesomeIcon icon={faMinus} /></button>
-            <button onClick={handleMaximize} className="no-drag h-9 w-9 cursor-pointer text-text-alt rounded hover:bg-title-hover hover:text-text animate">{maximized ? <FontAwesomeIcon icon={faWindowRestore} /> : <FontAwesomeIcon icon={faWindowMaximize} />}</button>
-            <button onClick={handleClose} className="no-drag h-9 w-9 cursor-pointer text-text-alt rounded hover:bg-danger hover:text-text animate"><FontAwesomeIcon icon={faXmark} /></button>
+            <button onClick={handleMinimize} className="no-drag h-9 w-9 cursor-pointer text-text-alt rounded hover:bg-title-hover hover:text-text focus:bg-title-focus focus:text-text focus:outline-none animate"><FontAwesomeIcon icon={faMinus} /></button>
+            <button onClick={handleMaximize} className="no-drag h-9 w-9 cursor-pointer text-text-alt rounded hover:bg-title-hover hover:text-text focus:bg-title-focus focus:text-text focus:outline-none animate">{maximized ? <FontAwesomeIcon icon={faWindowRestore} /> : <FontAwesomeIcon icon={faWindowMaximize} />}</button>
+            <button onClick={handleClose} className="no-drag h-9 w-9 cursor-pointer text-text-alt rounded hover:bg-danger hover:text-text focus:bg-danger focus:text-text focus:outline-none animate"><FontAwesomeIcon icon={faXmark} /></button>
         </div>
     </div>
 }
@@ -144,7 +145,7 @@ function DropdownItem({ item, onSelect }: { item: MenuItem, onSelect: () => void
             item.action?.()
             onSelect()
         }}
-        className={`flex w-full items-center justify-between px-3 py-1.5 text-sm text-text-alt text-left animate ${item.enabled === false ? 'cursor-not-allowed opacity-50' : 'hover:bg-title-hover hover:text-text cursor-pointer'}`}
+        className={`flex w-full items-center justify-between px-3 py-1.5 text-sm text-text-alt text-left animate ${item.enabled === false ? 'cursor-not-allowed opacity-50' : 'hover:bg-title-hover hover:text-text cursor-pointer focus:bg-title-focus focus:text-text focus:outline-none'}`}
     >
         <span>{item.label}</span>
         {item.shortcut && <span className="text-xs opacity-70">{item.shortcut}</span>}
@@ -164,7 +165,7 @@ function MenuButton({ menu, open, onOpen, onClose }: { menu: MenuDefinition, ope
             open ? onClose() : onOpen()
         }}
     >
-        <button onClick={() => open ? onClose() : onOpen()} className={`h-9 cursor-pointer px-4 text-sm text-text-alt animate ${open ? 'bg-title-hover text-text' : 'hover:bg-title-hover hover:text-text'}`}>{menu.title}</button>
+        <button onClick={() => open ? onClose() : onOpen()} className={`h-9 cursor-pointer px-4 text-sm text-text-alt animate focus:outline-none focus:bg-title-focus focus:text-text ${open ? 'bg-title-hover text-text' : 'hover:bg-title-hover hover:text-text'}`}>{menu.title}</button>
         {open && <DropdownMenu items={menu.items} onSelect={onClose} />}
     </div>
 }

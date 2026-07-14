@@ -14,6 +14,9 @@ interface EditorContextValue {
     saveDocument(): Promise<void>
     nextTab(): void
     previousTab(): void
+    beginTabDrag(documentID: string): void
+    dropTab(documentID: string): void
+    endTabDrag(): void
 }
 
 interface EditorDocumentState {
@@ -38,6 +41,7 @@ export function EditorProvider({ children }: PropsWithChildren) {
     const [activeDocumentID, setActiveDocumentID] = useState<string | null>(null)
     const autosaveTimer = useRef<number | null>(null)
     const restored = useRef(false)
+    const dragDocumentID = useRef<string | null>(null)
 
     const activeDocument = documents.find(d => d.id === activeDocumentID) || null
 
@@ -130,6 +134,29 @@ export function EditorProvider({ children }: PropsWithChildren) {
         }))
     }
 
+    const beginTabDrag = (documentID: string) => {
+        dragDocumentID.current = documentID
+    }
+
+    const dropTab = (documentID: string) => {
+        const draggedID = dragDocumentID.current
+        if(!draggedID || draggedID === documentID) return
+        setDocuments(prev => {
+            const documents = [...prev]
+            const srcIndex = documents.findIndex(d => d.id === draggedID)
+            const destIndex = documents.findIndex(d => d.id === documentID)
+            if(srcIndex === -1 || destIndex === -1) return prev
+            const [dragged] = documents.splice(srcIndex, 1)
+            documents.splice(destIndex, 0, dragged)
+            return documents
+        })
+        dragDocumentID.current = null
+    }
+
+    const endTabDrag = () => {
+        dragDocumentID.current = null
+    }
+
     useEffect(() => {
         if(!activeDocument) return
         if(!activeDocument.dirty) return
@@ -177,7 +204,10 @@ export function EditorProvider({ children }: PropsWithChildren) {
         updateMarkdown,
         saveDocument,
         nextTab,
-        previousTab
+        previousTab,
+        beginTabDrag,
+        dropTab,
+        endTabDrag
     }
 
     return <EditorContext.Provider value={value}>
