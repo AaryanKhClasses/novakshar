@@ -11,14 +11,25 @@ interface Props {
 }
 
 export function FolderNode({ folder, folders }: Props) {
-    const { documents, selectedFolderID, selectFolder, showContextMenu, editing, updateEditingValue, commitRename, cancelRename } = useExplorer()
+    const { documents, selectedFolderID, dropTargetID, selectFolder, showContextMenu, editing, updateEditingValue, commitRename, cancelRename, beginDragFolder, endDrag, dropOnFolder, setDropTargetID } = useExplorer()
     const [expanded, setExpanded] = useState(false)
     const folderChildren = folders.filter(f => f.parentID === folder.id)
     const folderDocuments = documents.filter(d => d.folderID === folder.id)
     const children = [...folderChildren, ...folderDocuments]
 
     return <div>
-        <div onClick={e => {
+        <div draggable
+            onDragStart={() => beginDragFolder(folder.id)}
+            onDragEnd={endDrag}
+            onDragEnter={() => setDropTargetID(folder.id)}
+            onDragExit={() => setDropTargetID(null)}
+            onDragOver={e => e.preventDefault()}
+            onDrop={async e => {
+                e.preventDefault()
+                setDropTargetID(null)
+                await dropOnFolder(folder.id)
+            }}
+            onClick={e => {
                 e.stopPropagation()
                 selectFolder(folder.id)
                 setExpanded(!expanded)
@@ -26,7 +37,7 @@ export function FolderNode({ folder, folders }: Props) {
                 e.preventDefault()
                 selectFolder(folder.id)
                 showContextMenu(folder.id, e.clientX, e.clientY, 'folder')
-            }} className={`cursor-pointer text-sm items-center flex gap-2 pl-5 py-1 animate ${selectedFolderID === folder.id ? 'bg-explorer-selected border-l-2 border-border-focus text-text' : 'hover:bg-explorer-hover text-text-alt hover:text-text'}`}
+            }} className={`cursor-pointer text-sm items-center flex gap-2 pl-5 py-1 animate ${selectedFolderID === folder.id ? 'bg-explorer-selected border-l-2 border-border-focus text-text' : 'hover:bg-explorer-hover text-text-alt hover:text-text'} ${dropTargetID === folder.id ? 'bg-explorer-selected border border-border-focus' : ''}`}
         >
             {children.length > 0 ? <span>{expanded ? <FontAwesomeIcon icon={faFolderOpen} /> : <FontAwesomeIcon icon={faFolder} />}</span> : <FontAwesomeIcon icon={faFolder} />}
             {editing?.id === folder.id ? <input

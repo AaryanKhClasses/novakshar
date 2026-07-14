@@ -26,9 +26,9 @@ export class WorkspaceLoader {
             for(const folder of folders) map.set(folder.id, folder)
             return map
         }))
-        const folderFileStore = new DesktopFolderFileStore(this.fileSystem, workspacePath, folderPathResolver)
         const documentStore = new SQLiteDocumentStore(database.context)
         const documentFileStore = new DesktopDocumentFileStore(this.fileSystem, workspacePath)
+        const folderFileStore = new DesktopFolderFileStore(this.fileSystem, workspacePath, folderPathResolver, folderStore, documentStore)
         const attachmentStore = new SQLiteAttachmentStore(database.context)
 
         const workspaceManager = new WorkspaceManager(workspaceStore, this.eventBus, this.clock, this.idGenerator)

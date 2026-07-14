@@ -20,6 +20,8 @@ export function ShortcutProvider({ children }: PropsWithChildren) {
                 action
             }
         
+            if(ctrl && shift && key === 'n') performAction(workspace.createWorkspace())
+            if(ctrl && shift && key === 'o') performAction(workspace.openWorkspace())
             if(ctrl && key === 's') performAction(await editor.saveDocument())
             if(ctrl && key === 'w') performAction(editor.activeDocumentID && await editor.closeDocument(editor.activeDocumentID))
             if(ctrl && !shift && e.key === 'Tab') performAction(editor.nextTab())

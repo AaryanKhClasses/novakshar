@@ -12,4 +12,6 @@ export function registerExplorerIPC(host: ApplicationHost): void {
     ipcMain.handle(IPCChannels.explorer.renameDocument, (_, documentID: string, title: string) => host.renameDocument(documentID, title))
     ipcMain.handle(IPCChannels.explorer.deleteFolder, (_, folderID: string) => host.deleteFolder(folderID))
     ipcMain.handle(IPCChannels.explorer.deleteDocument, (_, documentID: string) => host.deleteDocument(documentID))
+    ipcMain.handle(IPCChannels.explorer.moveFolder, (_, folderID: string, parentID: string | null) => host.moveFolder(folderID, parentID))
+    ipcMain.handle(IPCChannels.explorer.moveDocument, (_, documentID: string, folderID: string | null) => host.moveDocument(documentID, folderID))
 }

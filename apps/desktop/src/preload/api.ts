@@ -64,6 +64,12 @@ export const api = {
         },
         deleteDocument(documentID: string): Promise<void> {
             return ipcRenderer.invoke(IPCChannels.explorer.deleteDocument, documentID)
+        },
+        moveFolder(folderID: string, parentID: string | null): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.explorer.moveFolder, folderID, parentID)
+        },
+        moveDocument(documentID: string, folderID: string | null): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.explorer.moveDocument, documentID, folderID)
         }
     },
     editor: {

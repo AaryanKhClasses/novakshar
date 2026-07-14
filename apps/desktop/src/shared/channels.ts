@@ -21,7 +21,9 @@ export const IPCChannels = {
         renameFolder: 'explorer:renameFolder',
         renameDocument: 'explorer:renameDocument',
         deleteFolder: 'explorer:deleteFolder',
-        deleteDocument: 'explorer:deleteDocument'
+        deleteDocument: 'explorer:deleteDocument',
+        moveFolder: 'explorer:moveFolder',
+        moveDocument: 'explorer:moveDocument'
     },
     editor: {
         open: 'editor:open',

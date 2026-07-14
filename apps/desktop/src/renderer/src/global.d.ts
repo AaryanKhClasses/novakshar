@@ -30,6 +30,8 @@ declare global {
                 renameDocument(documentID: string, title: string): Promise<void>
                 deleteFolder(folderID: string): Promise<void>
                 deleteDocument(documentID: string): Promise<void>
+                moveFolder(folderID: string, parentID: string | null): Promise<void>
+                moveDocument(documentID: string, folderID: string | null): Promise<void>
             },
             editor: {
                 open(documentID: string): Promise<OpenDocumentInfo>

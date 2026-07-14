@@ -4,10 +4,13 @@ import { useEditor, useExplorer } from '@renderer/providers'
 import { DocumentInfo } from '@shared/document'
 
 export function DocumentNode({ document }: { document: DocumentInfo }) {
-    const { selectedDocumentID, editing, updateEditingValue, commitRename, cancelRename, selectDocument, showContextMenu } = useExplorer()
+    const { selectedDocumentID, editing, updateEditingValue, commitRename, cancelRename, selectDocument, showContextMenu, beginDragDocument, endDrag } = useExplorer()
     const { openDocument } = useEditor()
 
-    return <div onClick={e => {
+    return <div draggable
+            onDragStart={() => beginDragDocument(document.id)}
+            onDragEnd={() => endDrag()}
+            onClick={e => {
                 e.stopPropagation()
                 selectDocument(document.id)
                 openDocument(document.id)

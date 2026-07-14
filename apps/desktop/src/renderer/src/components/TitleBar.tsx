@@ -17,7 +17,7 @@ interface MenuDefinition {
     items: MenuItem[]
 }
 
-type MenuActionKey = 'createWorkspace' | 'createDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace'
+type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace'
 
 interface MenuItemDefinition {
     label: string
@@ -37,7 +37,7 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
         title: 'File',
         items: [
             { label: 'New Workspace', shortcut: 'Ctrl+Shift+N', action: 'createWorkspace' },
-            { label: 'Open Workspace', shortcut: 'Ctrl+Shift+O', enabled: false },
+            { label: 'Open Workspace', shortcut: 'Ctrl+Shift+O', action: 'openWorkspace' },
             { label: 'New Document', shortcut: 'Ctrl+N', action: 'createDocument' },
             { label: 'Open Document', shortcut: 'Ctrl+O', enabled: false },
             { separator: true, label: '' },
@@ -68,7 +68,7 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
 ]
 
 export function TitleBar() {
-    const { workspaceName, createWorkspace } = useWorkspace()
+    const { workspaceName, createWorkspace, openWorkspace } = useWorkspace()
     const { saveDocument, closeDocument, activeDocumentID } = useEditor()
     const { createDocument } = useExplorer()
     const { toggleOverlay } = useOverlay()
@@ -98,6 +98,7 @@ export function TitleBar() {
     const menus: MenuDefinition[] = useMemo(() => {
         const actions: Record<MenuActionKey, () => unknown> = {
             createWorkspace,
+            openWorkspace,
             createDocument,
             saveDocument,
             closeDocument: () => void closeDocument(activeDocumentID ?? ''),

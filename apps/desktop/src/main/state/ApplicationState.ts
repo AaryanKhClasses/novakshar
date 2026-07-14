@@ -6,6 +6,8 @@ export interface ApplicationState {
     lastWorkspace: string | null
     editor: EditorSessionState
     window: {
+        x: number | null
+        y: number | null
         width: number
         height: number
         maximized: boolean
@@ -21,6 +23,8 @@ export const DefaultApplicationState: ApplicationState = {
         activeDocumentID: null
     },
     window: {
+        x: null,
+        y: null,
         width: 1600,
         height: 900,
         maximized: false

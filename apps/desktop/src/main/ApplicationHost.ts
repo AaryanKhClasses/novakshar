@@ -84,7 +84,7 @@ export class ApplicationHost {
 
     public async getRootFolders(): Promise<FolderInfo[]> {
         if(!this.session) return []
-        const folders = await this.session.getRootFolders()
+        const folders = await this.session.folderService.getRootFolders()
         return folders.map(f => ({
             id: f.id,
             name: f.name,
@@ -96,7 +96,7 @@ export class ApplicationHost {
 
     public async getFolders(): Promise<FolderInfo[]> {
         if(!this.session) return []
-        const folders = await this.session.getAllFolders()
+        const folders = await this.session.folderService.getAll()
         return folders.map(f => ({
             id: f.id,
             name: f.name,
@@ -132,6 +132,13 @@ export class ApplicationHost {
 
         const context = { timestamp: new Date() }
         await this.session.folderService.delete(context, folderID)
+    }
+
+    public async moveFolder(folderID: string, parentID: string | null): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+
+        const context = { timestamp: new Date() }
+        await this.session.folderService.move(context, folderID, parentID)
     }
 
     public async getDocuments(): Promise<DocumentInfo[]> {
@@ -185,6 +192,17 @@ export class ApplicationHost {
         if(!this.session) throw new Error('No workspace is open')
         const context = { timestamp: new Date() }
         await this.session.documentService.delete(context, documentID)
+    }
+
+    public async moveDocument(documentID: string, folderID: string | null): Promise<void> {
+        if(!this.session) throw new Error('No workspace is open')
+        const context = { timestamp: new Date() }
+        const folder = folderID ? await this.session.folderService.get(folderID) : null
+        const document = await this.session.documentService.get(documentID)
+        if(!document) throw new Error(`Document with ID ${documentID} not found`)
+        if(folderID && !folder) throw new Error(`Folder with ID ${folderID} not found`)
+        const newRelativePath = folder ? `${this.session.folderPathResolver.resolve(folder)}/${document.title}.md` : `${document.title}.md`
+        await this.session.documentService.move(context, documentID, folderID, newRelativePath)
     }
 
     public async openDocument(documentID: string): Promise<OpenDocumentInfo> {

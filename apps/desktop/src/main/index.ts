@@ -1,42 +1,10 @@
-import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
-import { join } from 'path'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { ApplicationHost } from './ApplicationHost'
+import { createWindow } from './createMainWindow'
 import { registerEditorIPC, registerExplorerIPC, registerWindowIPC, registerWorkspaceIPC } from './ipc'
 import { NativeDialogService } from './services'
-import { ApplicationStateStore } from './state'
-
-function createWindow(): BrowserWindow {
-    const mainWindow = new BrowserWindow({
-        width: 1920,
-        height: 1080,
-        frame: false,
-        titleBarStyle: 'hidden',
-        show: false,
-        autoHideMenuBar: true,
-        ...(process.platform === 'linux' ? {} : {}),
-        webPreferences: {
-            preload: join(__dirname, '../preload/index.js'),
-            sandbox: false
-        }
-    })
-
-    mainWindow.on('ready-to-show', () => {
-        mainWindow.show()
-    })
-
-    mainWindow.webContents.setWindowOpenHandler((details) => {
-        shell.openExternal(details.url)
-        return { action: 'deny' }
-    })
-
-    if(is.dev && process.env['ELECTRON_RENDERER_URL']) {
-        mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-    } else {
-        mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-    }
-    return mainWindow
-}
+import { ApplicationStateStore, WindowStateManager } from './state'
 
 app.whenReady().then(async() => {
     electronApp.setAppUserModelId('com.electron')
@@ -45,7 +13,9 @@ app.whenReady().then(async() => {
         optimizer.watchWindowShortcuts(window)
     })
 
-    const mainWindow = createWindow()
+    const stateStore = new ApplicationStateStore(app.getPath('userData'))
+    const windowState = new WindowStateManager(stateStore)
+    const mainWindow = await createWindow(windowState)
     const dialog = new NativeDialogService(mainWindow)
     const state = new ApplicationStateStore(app.getPath('userData'))
     const host = new ApplicationHost(dialog, state)
@@ -58,12 +28,10 @@ app.whenReady().then(async() => {
     await host.restoreWorkspace()
 
     app.on('activate', function () {
-        if(BrowserWindow.getAllWindows().length === 0) createWindow()
+        if(BrowserWindow.getAllWindows().length === 0) createWindow(windowState)
     })
 })
 
 app.on('window-all-closed', () => {
-    if(process.platform !== 'darwin') {
-        app.quit()
-    }
+    if(process.platform !== 'darwin') app.quit()
 })

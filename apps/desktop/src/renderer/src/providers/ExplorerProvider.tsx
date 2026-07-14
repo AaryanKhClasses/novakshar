@@ -1,6 +1,6 @@
 import { DocumentInfo } from '@shared/document'
 import { FolderInfo } from '@shared/folder'
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
 
 export interface ExplorerContextMenuState {
     id: string
@@ -16,6 +16,11 @@ export interface ExplorerEditingState {
     type: 'folder' | 'document'
 }
 
+interface DragData {
+    type: 'folder' | 'document'
+    id: string
+}
+
 interface ExplorerContextValue {
     folders: FolderInfo[]
     documents: DocumentInfo[]
@@ -23,6 +28,7 @@ interface ExplorerContextValue {
     selectedDocumentID: string | null
     contextMenu: ExplorerContextMenuState | null
     editing: ExplorerEditingState | null
+    dropTargetID: string | null
     refresh(): Promise<void>
     createFolder(): Promise<void>
     createDocument(): Promise<void>
@@ -39,6 +45,11 @@ interface ExplorerContextValue {
     commitRename(): Promise<void>
     cancelRename(): void
     findDocument(documentID: string): DocumentInfo | undefined
+    beginDragFolder(folderID: string): void
+    beginDragDocument(documentID: string): void
+    setDropTargetID(folderID: string | null): void
+    dropOnFolder(folderID: string): Promise<void>
+    endDrag(): void
 }
 
 const ExplorerContext = createContext<ExplorerContextValue | null>(null)
@@ -50,6 +61,8 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
     const [selectedDocumentID, setSelectedDocumentID] = useState<string | null>(null)
     const [contextMenu, setContextMenu] = useState<ExplorerContextMenuState | null>(null)
     const [editing, setEditing] = useState<ExplorerEditingState | null>(null)
+    const dragData = useRef<DragData | null>(null)
+    const [dropTargetID, setDropTargetID] = useState<string | null>(null)
 
     const refresh = async() => {
         const folders = await window.novakshar.explorer.getFolders()
@@ -152,6 +165,29 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         return documents.find(d => d.id === documentID)
     }
 
+    const beginDragFolder = (folderID: string) => {
+        dragData.current = { type: 'folder', id: folderID }
+    }
+
+    const beginDragDocument = (documentID: string) => {
+        dragData.current = { type: 'document', id: documentID }
+    }
+
+    const dropOnFolder = async (folderID: string) => {
+        const dragged = dragData.current
+        if(!dragged) return
+        if(dragged.type === 'folder') {
+            if(dragged.id === folderID) return
+            await window.novakshar.explorer.moveFolder(dragged.id, folderID)
+        } else await window.novakshar.explorer.moveDocument(dragged.id, folderID)
+        endDrag()
+        await refresh()
+    }
+
+    const endDrag = () => {
+        dragData.current = null
+    }
+
     useEffect(() => {
         refresh()
     }, [])
@@ -163,6 +199,7 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         selectedDocumentID,
         contextMenu,
         editing,
+        dropTargetID,
         refresh,
         createFolder,
         createDocument,
@@ -178,7 +215,12 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
         updateEditingValue,
         cancelRename,
         commitRename,
-        findDocument
+        findDocument,
+        beginDragFolder,
+        beginDragDocument,
+        dropOnFolder,
+        setDropTargetID,
+        endDrag,
     }
 
     return <ExplorerContext.Provider value={value}>

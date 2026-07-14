@@ -1,7 +1,6 @@
 import { $createHeadingNode } from '@lexical/rich-text'
 import { applyFormat$, applyListType$, convertSelectionToNode$, currentBlockType$, currentFormat$, currentListType$, insertThematicBreak$, IS_BOLD, IS_ITALIC, IS_STRIKETHROUGH, IS_UNDERLINE, useCellValue, useCellValues, usePublisher } from '@mdxeditor/editor'
 import { $createParagraphNode } from 'lexical'
-import { useEffect } from 'react'
 
 export function EditorToolbar() {
     const [currentFormat] = useCellValues(currentFormat$)
@@ -10,10 +9,6 @@ export function EditorToolbar() {
     const applyFormat = usePublisher(applyFormat$)
     const insertThematicBreak = usePublisher(insertThematicBreak$)
     const applyListType = usePublisher(applyListType$)
-
-    useEffect(() => {
-        console.log(currentFormat)
-    }, [currentFormat])
 
     return <div className="h-full space-x-0.5">
         <ToolbarButton active={(currentFormat & IS_BOLD) !== 0} onClick={() => applyFormat('bold')} className="font-bold">B</ToolbarButton>
