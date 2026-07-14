@@ -1,4 +1,10 @@
 export const IPCChannels = {
+    window: {
+        minimize: 'window:minimize',
+        maximize: 'window:maximize',
+        close: 'window:close',
+        isMaximized: 'window:isMaximized'
+    },
     workspace: {
         ping: 'workspace:ping',
         create: 'workspace:create',

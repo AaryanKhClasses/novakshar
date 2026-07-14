@@ -7,6 +7,12 @@ export { }
 declare global {
     interface Window {
         novakshar: {
+            window: {
+                minimize(): Promise<void>
+                maximize(): Promise<void>
+                close(): Promise<void>
+                isMaximized(): Promise<boolean>
+            },
             workspace: {
                 ping(): Promise<string>
                 create(): Promise<WorkspaceInfo | null>

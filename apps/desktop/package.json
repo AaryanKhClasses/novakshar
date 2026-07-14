@@ -1,5 +1,6 @@
 {
     "name": "desktop",
+    "version": "0.0.1",
     "private": true,
     "main": "./out/main/index.js",
     "scripts": {
@@ -23,6 +24,7 @@
         "tailwindcss": "^4.3.2",
         "@tailwindcss/typography": "^0.5.20",
         "@fortawesome/free-solid-svg-icons": "^7.2.0",
+        "@fortawesome/free-regular-svg-icons": "^7.2.0",
         "@fortawesome/react-fontawesome": "^3.3.1",
         "@mdxeditor/editor": "^4.0.4",
         "lexical": "^0.35.0",

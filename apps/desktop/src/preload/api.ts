@@ -6,6 +6,20 @@ import { WorkspaceInfo } from '@shared/workspace'
 import { ipcRenderer } from 'electron'
 
 export const api = {
+    window: {
+        minimize(): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.window.minimize)
+        },
+        maximize(): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.window.maximize)
+        },
+        close(): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.window.close)
+        },
+        isMaximized(): Promise<boolean> {
+            return ipcRenderer.invoke(IPCChannels.window.isMaximized)
+        }
+    },
     workspace: {
         ping(): Promise<string> {
             return ipcRenderer.invoke(IPCChannels.workspace.ping)

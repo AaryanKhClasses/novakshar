@@ -15,6 +15,7 @@
     --bg-tab-selected: #21262d;
     --bg-tab-hover: #1c2128;
     --bg-editor-toolbar: #21262d;
+    --bg-title-hover: #1c2128;
 
     --text: #e6edf3;
     --text-alt: #8b949e;
@@ -46,6 +47,7 @@
     --color-tab-selected: var(--bg-tab-selected);
     --color-tab-hover: var(--bg-tab-hover);
     --color-editor-toolbar: var(--bg-editor-toolbar);
+    --color-title-hover: var(--bg-title-hover);
     --color-text: var(--text);
     --color-text-alt: var(--text-alt);
     --color-text-muted: var(--text-muted);
@@ -84,4 +86,12 @@ body {
 
 ::-webkit-scrollbar {
     display: none;
+}
+
+.drag-region {
+    -webkit-app-region: drag;
+}
+
+.no-drag {
+    -webkit-app-region: no-drag;
 }

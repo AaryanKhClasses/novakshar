@@ -2,7 +2,7 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import { ApplicationHost } from './ApplicationHost'
-import { registerEditorIPC, registerExplorerIPC, registerWorkspaceIPC } from './ipc'
+import { registerEditorIPC, registerExplorerIPC, registerWindowIPC, registerWorkspaceIPC } from './ipc'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
 
@@ -10,6 +10,8 @@ function createWindow(): BrowserWindow {
     const mainWindow = new BrowserWindow({
         width: 1920,
         height: 1080,
+        frame: false,
+        titleBarStyle: 'hidden',
         show: false,
         autoHideMenuBar: true,
         ...(process.platform === 'linux' ? {} : {}),
@@ -49,6 +51,7 @@ app.whenReady().then(async() => {
     const host = new ApplicationHost(dialog, state)
 
     ipcMain.on('ping', () => console.log('pong'))
+    registerWindowIPC(host)
     registerWorkspaceIPC(host)
     registerExplorerIPC(host)
     registerEditorIPC(host)

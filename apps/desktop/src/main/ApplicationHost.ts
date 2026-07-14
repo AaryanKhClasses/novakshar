@@ -3,6 +3,7 @@ import { DocumentInfo } from '@shared/document'
 import { EditorSessionState, OpenDocumentInfo } from '@shared/editor'
 import { FolderInfo } from '@shared/folder'
 import { WorkspaceInfo } from '@shared/workspace'
+import { BrowserWindow } from 'electron'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
 
@@ -16,6 +17,27 @@ export class ApplicationHost {
     ) { }
 
     public get currentSession(): WorkspaceSession | null { return this.session }
+
+    public async minimizeWindow(): Promise<void> {
+        BrowserWindow.getFocusedWindow()?.minimize()
+    }
+
+    public async maximizeWindow(): Promise<void> {
+        const window = BrowserWindow.getFocusedWindow()
+        if(!window) return
+        if(window.isMaximized()) window.unmaximize()
+        else window.maximize()
+    }
+
+    public async closeWindow(): Promise<void> {
+        BrowserWindow.getFocusedWindow()?.close()
+    }
+
+    public async isWindowMaximized(): Promise<boolean> {
+        const window = BrowserWindow.getFocusedWindow()
+        if(!window) return false
+        return window.isMaximized()
+    }
 
     public async createWorkspace(): Promise<WorkspaceInfo | null> {
         const path = await this.dialog.chooseWorkspaceFolder()
@@ -135,6 +157,7 @@ export class ApplicationHost {
         return {
             id: document.id,
             title: document.title,
+            relativePath: document.relativePath,
             folderID: document.folderID ?? null,
             favorite: document.favorite
         }
