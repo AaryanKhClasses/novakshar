@@ -1,4 +1,4 @@
-import { headingsPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, searchPlugin, thematicBreakPlugin, toolbarPlugin } from '@mdxeditor/editor'
+import { AdmonitionDirectiveDescriptor, codeBlockPlugin, codeMirrorPlugin, directivesPlugin, headingsPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, searchPlugin, thematicBreakPlugin, toolbarPlugin } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 import { OverlayType, useEditor, useExplorer, useOverlay } from '@renderer/providers'
 import { EditorToolbar } from './EditorToolbar'
@@ -15,6 +15,13 @@ export function EditorPane() {
         thematicBreakPlugin(),
         markdownShortcutPlugin(),
         searchPlugin(),
+        directivesPlugin({
+            directiveDescriptors: [AdmonitionDirectiveDescriptor]
+        }),
+        codeBlockPlugin({ defaultCodeBlockLanguage: 'text' }),
+        codeMirrorPlugin({
+            codeBlockLanguages: { text: 'Text', ts: 'Typescript' }
+        }),
         toolbarPlugin({
             toolbarContents: () => <EditorToolbar />,
             toolbarPosition: 'bottom',

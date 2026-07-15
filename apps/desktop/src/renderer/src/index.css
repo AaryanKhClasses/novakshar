@@ -72,7 +72,72 @@
 }
 
 .editor-toolbar {
-    @apply absolute bg-editor-toolbar left-1/2 top-140 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-100
+    @apply absolute bg-editor-toolbar left-1/2 top-150 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-[100]
+}
+
+.mdxeditor ._codeMirrorWrapper_f3hmk_391 {
+    @apply border border-border p-0
+}
+
+.mdxeditor ._codeMirrorToolbar_f3hmk_408 {
+    @apply static flex bg-editor-toolbar items-center justify-between py-1 px-2 border-b border-border
+}
+
+.mdxeditor ._selectTrigger_f3hmk_308 {
+    @apply bg-transparent text-text-alt
+}
+
+._selectContainer_f3hmk_288 {
+    @apply bg-editor border border-border rounded-lg p-1
+}
+
+._selectItem_f3hmk_301 {
+    @apply bg-editor! text-text-alt! hover:bg-editor-toolbar! hover:text-text! transition duration-300 ease-in-out
+}
+
+._selectItem_f3hmk_301[data-state="checked"] {
+    @apply bg-editor-toolbar! text-text!
+}
+
+.mdxeditor ._iconButton_f3hmk_456 {
+    @apply text-text-muted hover:text-danger transition duration-300 ease-in-out cursor-pointer
+}
+
+.mdxeditor .cm-editor {
+    @apply bg-editor text-text-alt
+}
+
+.mdxeditor .cm-gutters {
+    @apply bg-editor border-r border-border
+}
+
+.mdxeditor .cm-activeLineGutter {
+    @apply bg-editor-toolbar
+}
+
+.mdxeditor .cm-cursor {
+    @apply border border-border-focus
+}
+
+.mdxeditor .cm-activeLine {
+    @apply bg-editor-toolbar transition duration-300 ease-in-out
+}
+
+.mdxeditor .cm-tooltip-autocomplete {
+    @apply bg-editor-toolbar border border-border
+}
+
+.mdxeditor .cm-tooltip-autocomplete > ul > li[aria-selected] {
+    @apply bg-editor-toolbar text-text
+}
+
+/* temp admonition styles */
+._admonitionNote_6j9u9_160 {
+    @apply bg-editor-toolbar border-border rounded-xl
+}
+
+._nestedEditor_f3hmk_960 {
+    @apply bg-editor
 }
 
 body {
