@@ -72,7 +72,7 @@
 }
 
 .editor-toolbar {
-    @apply absolute bg-editor-toolbar left-1/2 top-150 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-100
+    @apply absolute bg-editor-toolbar left-1/2 top-160 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-100
 }
 
 .mdxeditor ._codeMirrorWrapper_f3hmk_391 {

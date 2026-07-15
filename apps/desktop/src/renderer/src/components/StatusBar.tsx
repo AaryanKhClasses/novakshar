@@ -13,6 +13,7 @@ export function StatusBar() {
         <div className="flex gap-6">
             <span className="hover:text-text animate">{statistics?.words ?? 0} words</span>
             <span className="hover:text-text animate">{statistics?.characters ?? 0} characters</span>
+            <span className="hover:text-text animate">{statistics?.readingTime ?? 0} min read</span>
             <span className="hover:text-text animate">{statistics?.lines ?? 0} lines</span>
         </div>
     </div>

@@ -1,7 +1,7 @@
 import { faWindowMaximize, faWindowRestore } from '@fortawesome/free-regular-svg-icons'
 import { faMinus, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { OverlayType, useEditor, useExplorer, useOverlay, useWorkspace } from '@renderer/providers'
+import { OverlayType, useEditor, useExplorer, useOverlay, useView, useWorkspace } from '@renderer/providers'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface MenuItem {
@@ -17,7 +17,7 @@ interface MenuDefinition {
     items: MenuItem[]
 }
 
-type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace'
+type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace' | 'toggleZenMode' | 'toggleFocusMode'
 
 interface MenuItemDefinition {
     label: string
@@ -64,6 +64,13 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
             { label: 'Paste', shortcut: 'Ctrl+V', enabled: false },
             { label: 'Select All', shortcut: 'Ctrl+A', enabled: false }
         ]
+    },
+    {
+        title: 'View',
+        items: [
+            { label: 'Toggle Zen Mode', shortcut: 'Ctrl+Alt+Z', action: 'toggleZenMode' },
+            { label: 'Toggle Focus Mode', shortcut: 'Ctrl+Alt+F', action: 'toggleFocusMode' }
+        ]
     }
 ]
 
@@ -72,6 +79,7 @@ export function TitleBar() {
     const { saveDocument, closeDocument, activeDocumentID } = useEditor()
     const { createDocument } = useExplorer()
     const { toggleOverlay } = useOverlay()
+    const { toggleZenMode, toggleFocusMode } = useView()
 
     const [maximized, setMaximized] = useState(false)
     const [openMenu, setOpenMenu] = useState<string | null>(null)
@@ -105,7 +113,9 @@ export function TitleBar() {
             closeWindow: () => window.novakshar.window.close(),
             find: () => toggleOverlay(OverlayType.Find),
             replace: () => toggleOverlay(OverlayType.Find, true),
-            quickOpenDocument: () => toggleOverlay(OverlayType.QuickOpen)
+            quickOpenDocument: () => toggleOverlay(OverlayType.QuickOpen),
+            toggleZenMode,
+            toggleFocusMode
         }
 
         return MENU_DEFINITIONS.map(menu => ({
@@ -115,7 +125,7 @@ export function TitleBar() {
                 action: item.action ? actions[item.action] : undefined
             }))
         }))
-    }, [activeDocumentID, closeDocument, createDocument, createWorkspace, saveDocument, toggleOverlay])
+    }, [activeDocumentID, closeDocument, createDocument, createWorkspace, saveDocument, toggleOverlay, toggleZenMode, toggleFocusMode, openWorkspace])
 
     return <div className="drag-region flex h-full items-center justify-between border-b border-border px-4 bg-title-bar text-text">
         <div className="flex items-center">

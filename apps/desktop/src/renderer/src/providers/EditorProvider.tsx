@@ -31,6 +31,7 @@ interface EditorStatistics {
     words: number
     characters: number
     lines: number
+    readingTime: number
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)

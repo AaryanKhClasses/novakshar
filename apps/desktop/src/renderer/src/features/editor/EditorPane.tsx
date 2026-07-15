@@ -1,12 +1,13 @@
 import { AdmonitionDirectiveDescriptor, codeBlockPlugin, codeMirrorPlugin, directivesPlugin, headingsPlugin, linkPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, searchPlugin, tablePlugin, thematicBreakPlugin, toolbarPlugin } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
-import { OverlayType, useEditor, useExplorer, useOverlay } from '@renderer/providers'
+import { OverlayType, useEditor, useExplorer, useOverlay, useView } from '@renderer/providers'
 import { EditorToolbar } from './EditorToolbar'
 
 export function EditorPane() {
     const { activeDocument, updateMarkdown } = useEditor()
     const { createDocument } = useExplorer()
     const { toggleOverlay } = useOverlay()
+    const { mode } = useView()
 
     const plugins = [
         headingsPlugin(),
@@ -26,7 +27,7 @@ export function EditorPane() {
         toolbarPlugin({
             toolbarContents: () => <EditorToolbar />,
             toolbarPosition: 'bottom',
-            toolbarClassName: 'editor-toolbar'
+            toolbarClassName: 'editor-toolbar' + (mode === 'zen' ? ' top-185!' : '')
         }),
         markdownShortcutPlugin()
     ]
@@ -42,7 +43,7 @@ export function EditorPane() {
         </div>
     </div>
     return <div className="relative prose prose-invert prose-p:my-0 prose-td:p-0 prose-td:align-middle prose-th:p-0 prose-headings:mb-4 max-w-none h-full overflow-y-auto p-6 bg-editor text-text">
-        <div className="w-[70%] mx-auto overflow-y-auto max-h-full">
+        <div className="w-[70%] mx-auto overflow-y-auto max-h-full pb-20">
             <MDXEditor
                 contentEditableClassName='text-text!'
                 key={activeDocument?.id}
