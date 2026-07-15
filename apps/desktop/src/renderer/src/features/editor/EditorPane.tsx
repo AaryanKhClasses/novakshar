@@ -1,4 +1,4 @@
-import { AdmonitionDirectiveDescriptor, codeBlockPlugin, codeMirrorPlugin, directivesPlugin, headingsPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, searchPlugin, thematicBreakPlugin, toolbarPlugin } from '@mdxeditor/editor'
+import { AdmonitionDirectiveDescriptor, codeBlockPlugin, codeMirrorPlugin, directivesPlugin, headingsPlugin, linkPlugin, listsPlugin, markdownShortcutPlugin, MDXEditor, quotePlugin, searchPlugin, tablePlugin, thematicBreakPlugin, toolbarPlugin } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 import { OverlayType, useEditor, useExplorer, useOverlay } from '@renderer/providers'
 import { EditorToolbar } from './EditorToolbar'
@@ -13,8 +13,9 @@ export function EditorPane() {
         listsPlugin(),
         quotePlugin(),
         thematicBreakPlugin(),
-        markdownShortcutPlugin(),
         searchPlugin(),
+        linkPlugin(),
+        tablePlugin(),
         directivesPlugin({
             directiveDescriptors: [AdmonitionDirectiveDescriptor]
         }),
@@ -26,7 +27,8 @@ export function EditorPane() {
             toolbarContents: () => <EditorToolbar />,
             toolbarPosition: 'bottom',
             toolbarClassName: 'editor-toolbar'
-        })
+        }),
+        markdownShortcutPlugin()
     ]
 
     if(!activeDocument) return <div className="flex flex-col h-full items-center justify-center bg-editor text-text-alt">
@@ -39,7 +41,7 @@ export function EditorPane() {
             <button onClick={() => toggleOverlay(OverlayType.QuickOpen)} className="px-4 py-2 rounded-xl bg-editor-toolbar border border-border cursor-pointer hover:bg-explorer-hover focus:outline-none focus:bg-explorer-hover focus:border-border-focus animate">Quick Open</button>
         </div>
     </div>
-    return <div className="relative prose prose-invert prose-p:my-0 prose-headings:mb-4 max-w-none h-full overflow-y-auto p-6 bg-editor text-text">
+    return <div className="relative prose prose-invert prose-p:my-0 prose-td:p-0 prose-td:align-middle prose-th:p-0 prose-headings:mb-4 max-w-none h-full overflow-y-auto p-6 bg-editor text-text">
         <div className="w-[70%] mx-auto overflow-y-auto max-h-full">
             <MDXEditor
                 contentEditableClassName='text-text!'

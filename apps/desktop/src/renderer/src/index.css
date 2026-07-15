@@ -72,7 +72,7 @@
 }
 
 .editor-toolbar {
-    @apply absolute bg-editor-toolbar left-1/2 top-150 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-[100]
+    @apply absolute bg-editor-toolbar left-1/2 top-150 -translate-x-1/2 w-fit h-fit flex items-center text-text-alt rounded-xl p-1 z-100
 }
 
 .mdxeditor ._codeMirrorWrapper_f3hmk_391 {
@@ -100,7 +100,7 @@
 }
 
 .mdxeditor ._iconButton_f3hmk_456 {
-    @apply text-text-muted hover:text-danger transition duration-300 ease-in-out cursor-pointer
+    @apply text-text-muted opacity-80! hover:text-danger transition duration-300 ease-in-out cursor-pointer
 }
 
 .mdxeditor .cm-editor {
@@ -138,6 +138,38 @@
 
 ._nestedEditor_f3hmk_960 {
     @apply bg-editor
+}
+
+th[data-tool-cell="true"] {
+    @apply bg-editor-toolbar! text-text-alt! opacity-80! text-center! self-center!
+}
+
+td:not(._toolCell_f3hmk_724), th:not(._toolCell_f3hmk_724):not([data-tool-cell='true']) {
+    @apply border-y-0! border-x-border!
+}
+
+tbody tr:nth-child(even) {
+    @apply bg-editor-toolbar opacity-60
+}
+
+._tableColumnEditorTrigger_f3hmk_743 {
+    @apply bg-editor-toolbar! text-text-alt hover:text-text opacity-80! text-center self-center rounded-none h-full cursor-pointer transition duration-300 ease-in-out
+}
+
+._tableColumnEditorPopoverContent_f3hmk_601 {
+    @apply bg-editor-toolbar border-border
+}
+
+._tableColumnEditorToolbar_f3hmk_788 button[aria-checked="true"] {
+    @apply text-text bg-editor transition duration-300 ease-in-out
+}
+
+._tableColumnEditorToolbar_f3hmk_788 button {
+    @apply text-text-alt hover:bg-editor hover:text-text transition duration-300 ease-in-out cursor-pointer
+}
+
+._addRowButton_f3hmk_745, ._addColumnButton_f3hmk_746 {
+    @apply opacity-100! bg-editor-toolbar text-text-alt hover:bg-editor-toolbar hover:text-text border-none transition duration-300 ease-in-out cursor-pointer
 }
 
 body {
