@@ -1,4 +1,3 @@
-import { calculateMarkdownStatistics } from '@renderer/utils/MarkdownStatistics'
 import { EditorSessionState } from '@shared/editor'
 import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
 import { useExplorer } from './ExplorerProvider'
@@ -25,6 +24,7 @@ interface EditorDocumentState {
     markdown: string
     dirty: boolean
     statistics: EditorStatistics
+    outline: HeadingInfo[]
 }
 
 interface EditorStatistics {
@@ -32,6 +32,12 @@ interface EditorStatistics {
     characters: number
     lines: number
     readingTime: number
+}
+
+export interface HeadingInfo {
+    level: 1 | 2 | 3 | 4 | 5 | 6
+    title: string
+    line: number
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)
@@ -58,7 +64,12 @@ export function EditorProvider({ children }: PropsWithChildren) {
             return
         }
         const opened = await window.novakshar.editor.open(documentID)
-        const state: EditorDocumentState = { ...opened, dirty: false, statistics: calculateMarkdownStatistics(opened.markdown) }
+        const state: EditorDocumentState = {
+            ...opened,
+            dirty: false,
+            statistics: calculateMarkdownStatistics(opened.markdown),
+            outline: getOutline(opened.markdown)
+        }
         setDocuments(prev => {
             if(prev.some(d => d.id === documentID)) return prev
             return [...prev, state]
@@ -99,7 +110,13 @@ export function EditorProvider({ children }: PropsWithChildren) {
         setDocuments(prev => prev.map(d => {
             if(d.id !== activeDocumentID) return d
             if(d.markdown === markdown) return d
-            return { ...d, markdown, dirty: true, statistics: calculateMarkdownStatistics(markdown) }
+            return {
+                ...d,
+                markdown,
+                dirty: true,
+                statistics: calculateMarkdownStatistics(markdown),
+                outline: getOutline(markdown)
+            }
         }))
     }
 
@@ -220,4 +237,23 @@ export function useEditor() {
     const context = useContext(EditorContext)
     if(!context) throw new Error('Editor Provider is not available.')
     return context
+}
+
+function calculateMarkdownStatistics(markdown: string): EditorStatistics {
+    const characters = markdown.length
+    const lines = markdown.length === 0 ? 1 : markdown.split(/\r\n|\r|\n/).length
+    const words = markdown.trim().length === 0 ? 0 : markdown.trim().split(/\s+/).length
+    const readingTime = Math.ceil(words / 200) // Assuming an average reading speed of 200 words per minute
+    return { words, characters, lines, readingTime }
+}
+
+function getOutline(markdown: string): HeadingInfo[] {
+    return markdown.split(/\r\n|\r|\n/).flatMap(line => {
+        const match = line.match(/^(#{1,6})\s+(.*)$/)
+        if(!match) return []
+        const level = match[1].length as 1 | 2 | 3 | 4 | 5 | 6
+        const title = match[2].trim()
+        const lineNumber = markdown.split(/\r\n|\r|\n/).indexOf(line) + 1
+        return [{ level, title, line: lineNumber }]
+    })
 }

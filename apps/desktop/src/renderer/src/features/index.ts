@@ -5,6 +5,8 @@ export * from './editor/Tabs'
 
 export * from './explorer/DocumentNode'
 export * from './explorer/ExplorerContextMenu'
+export * from './explorer/ExplorerFilesTab'
+export * from './explorer/ExplorerOutlineTab'
 export * from './explorer/ExplorerPane'
 export * from './explorer/ExplorerTree'
 export * from './explorer/FolderNode'

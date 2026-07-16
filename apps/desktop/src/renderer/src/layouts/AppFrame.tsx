@@ -17,7 +17,7 @@ export function AppFrame() {
         ? 'grid-rows-[1fr]' : 'grid-rows-[40px_36px_1fr_32px]'
     
     const editorClassName = mode === 'normal'
-        ? 'h-full w-full overflow-y-auto' : 'mx-auto max-w-5xl h-full w-full'
+        ? 'h-full w-full overflow-y-auto' : 'mx-auto max-w-[85%] h-full w-full overflow-y-auto'
 
     return <div className={`grid h-screen w-screen bg-editor overflow-hidden ${gridColumns} ${gridRows}`}>
         {showTitleBar && <div className="col-span-full"><TitleBar /></div>}

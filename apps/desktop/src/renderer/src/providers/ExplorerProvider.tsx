@@ -21,7 +21,10 @@ interface DragData {
     id: string
 }
 
+export const ExplorerTabs = ['files', 'outline'] as const
+
 interface ExplorerContextValue {
+    explorerTab: typeof ExplorerTabs[number]
     folders: FolderInfo[]
     documents: DocumentInfo[]
     selectedFolderID: string | null
@@ -29,6 +32,7 @@ interface ExplorerContextValue {
     contextMenu: ExplorerContextMenuState | null
     editing: ExplorerEditingState | null
     dropTargetID: string | null
+    setExplorerTab(explorerTab: typeof ExplorerTabs[number]): void
     refresh(): Promise<void>
     createFolder(): Promise<void>
     createDocument(): Promise<void>
@@ -55,6 +59,7 @@ interface ExplorerContextValue {
 const ExplorerContext = createContext<ExplorerContextValue | null>(null)
 
 export function ExplorerProvider({ children }: PropsWithChildren) {
+    const [explorerTab, setView] = useState<typeof ExplorerTabs[number]>('files')
     const [folders, setFolders] = useState<FolderInfo[]>([])
     const [documents, setDocuments] = useState<DocumentInfo[]>([])
     const [selectedFolderID, setSelectedFolderID] = useState<string | null>(null)
@@ -63,6 +68,8 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
     const [editing, setEditing] = useState<ExplorerEditingState | null>(null)
     const dragData = useRef<DragData | null>(null)
     const [dropTargetID, setDropTargetID] = useState<string | null>(null)
+
+    const setExplorerTab = (explorerTab: typeof ExplorerTabs[number]) => setView(explorerTab)
 
     const refresh = async() => {
         const folders = await window.novakshar.explorer.getFolders()
@@ -193,12 +200,14 @@ export function ExplorerProvider({ children }: PropsWithChildren) {
     }, [])
 
     const value: ExplorerContextValue = {
+        explorerTab,
         folders,
         documents,
         selectedFolderID,
         selectedDocumentID,
         contextMenu,
         editing,
+        setExplorerTab,
         dropTargetID,
         refresh,
         createFolder,

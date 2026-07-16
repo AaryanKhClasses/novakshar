@@ -1,22 +1,19 @@
-import { faFileCirclePlus, faFolderPlus } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useExplorer } from '@renderer/providers'
-import { ExplorerContextMenu } from './ExplorerContextMenu'
-import { ExplorerTree } from './ExplorerTree'
+import { ExplorerTabs, useExplorer } from '@renderer/providers'
+import { ExplorerFilesTab, ExplorerOutlineTab } from '..'
 
 export function ExplorerPane() {
-    const { folders, documents, createFolder, createDocument } = useExplorer()
+    const { explorerTab, setExplorerTab } = useExplorer()
 
     return <div className="h-full py-2 flex flex-col gap-1 bg-explorer text-text-muted border-r border-border">
-        <div className="flex items-center justify-between px-3">
-            <div className="font-medium text-text-alt p-1 text-sm tracking-wide">EXPLORER</div>
-            <div className="flex gap-1 justify-end items-center">
-                <button onClick={async() => await createFolder()} className="cursor-pointer hover:text-text hover:bg-explorer-hover p-1 animate focus:outline-none focus:text-text focus:bg-explorer-hover"><FontAwesomeIcon icon={faFolderPlus} /></button>
-                <button onClick={async() => await createDocument()} className="cursor-pointer hover:text-text hover:bg-explorer-hover p-1 animate focus:outline-none focus:text-text focus:bg-explorer-hover"><FontAwesomeIcon icon={faFileCirclePlus} /></button>
-            </div>
+        <div className="flex items-center border-b border-border bg-editor text-sm text-text-alt overflow-x-auto">
+            {ExplorerTabs.map(tab => <div
+                onClick={() => setExplorerTab(tab)}
+                className={`font-medium text-text-alt uppercase animate px-4 py-1 text-sm tracking-wide cursor-pointer ${tab === explorerTab ? 'bg-explorer hover:bg-explorer-selected text-text border-b-2 border-border-focus' : 'hover:bg-explorer-hover hover:text-text'}`} key={tab}
+            >
+                {tab}
+            </div>)}
         </div>
-        <hr className="border-border w-[90%] mx-auto" />
-        <ExplorerTree folders={folders} documents={documents} />
-        <ExplorerContextMenu />
+        {explorerTab === 'files' && <ExplorerFilesTab />}
+        {explorerTab === 'outline' && <ExplorerOutlineTab />}
     </div>
 }

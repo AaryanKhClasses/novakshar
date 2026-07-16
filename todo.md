@@ -7,3 +7,5 @@
 - Admonition Styling.
 - Generic Toolbar Drop-up Menu.
 - Attachments (Images, Audio, Videos, etc.)
+- Scroll to View Outline Item in Editor.
+- **TO FIX** Renaming in Explorer doesnt update Opened Tab Names.
