@@ -9,3 +9,4 @@
 - Attachments (Images, Audio, Videos, etc.)
 - Scroll to View Outline Item in Editor.
 - **TO FIX** Renaming in Explorer doesnt update Opened Tab Names.
+- **TO CHANGE** Soft Delete Folders (.folder.deletedAt) implementation.

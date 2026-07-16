@@ -9,6 +9,7 @@ export interface FolderProps {
     icon?: string | null
     createdAt: Date
     updatedAt: Date
+    deletedAt?: Date | null
 }
 
 export class Folder extends BaseEntity {
@@ -21,7 +22,8 @@ export class Folder extends BaseEntity {
         super({
             id: props.id,
             createdAt: props.createdAt,
-            updatedAt: props.updatedAt
+            updatedAt: props.updatedAt,
+            deletedAt: props.deletedAt ?? null
         })
         this.validateName(props.name)
 
