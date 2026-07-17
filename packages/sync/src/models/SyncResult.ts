@@ -1,10 +1,7 @@
-import { SyncMetadata } from '../index.js'
+import { SyncData } from '../index.js'
 
 export interface SyncResult {
-    metadata: SyncMetadata
+    data: SyncData
     markdown: Map<string, string>
-    createdDocuments: string[]
-    updatedDocuments: string[]
-    deletedDocuments: string[]
     hadConflicts: boolean
 }

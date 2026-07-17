@@ -112,6 +112,12 @@ export class DocumentService {
         }, document.id))
     }
 
+    public async import(document: Document): Promise<void> {
+        const exists = await this.documentFileStore.exists(document.relativePath)
+        if(!exists) await this.documentFileStore.create(document.relativePath, document.title)
+        await this.documentStore.save(document)
+    }
+
     private async getDocumentOrThrow(documentID: string): Promise<Document> {
         const document = await this.documentStore.get(documentID)
         if(!document) throw new DocumentError('Document not found', 'DOCUMENT_NOT_FOUND')

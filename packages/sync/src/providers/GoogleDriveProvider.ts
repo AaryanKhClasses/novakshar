@@ -1,23 +1,24 @@
-import { ISyncProvider, SyncMetadata } from '../index.js'
+import { Folder, Workspace, Document } from '@novakshar/core'
+import { ISyncProvider, SyncData } from '../index.js'
 import * as api from '../utils/GoogleDriveAPI.js'
 
 export class GoogleDriveProvider implements ISyncProvider {
     constructor(private accessToken: string) { }
 
-    public async downloadMetadata(workspaceID: string): Promise<SyncMetadata> {
-        const workspace = await this.getWorkspaceFolder(workspaceID)
+    public async downloadData(workspaceID: string): Promise<SyncData> {
+        const workspaceFolder = await this.getWorkspaceFolder(workspaceID)
         return {
-            manifest: await this.downloadJSONFile('manifest.json', workspace.id),
-            folders: await this.downloadJSONFile('folders.json', workspace.id),
-            documents: await this.downloadJSONFile('documents-manifest.json', workspace.id)
+            workspace: await this.downloadJSONFile<Workspace>('workspace.json', workspaceFolder.id),
+            folders: await this.downloadJSONFile<Folder[]>('folders.json', workspaceFolder.id),
+            documents: await this.downloadJSONFile<Document[]>('documents.json', workspaceFolder.id)
         }
     }
 
-    public async uploadMetadata(metadata: SyncMetadata): Promise<void> {
-        const workspace = await this.getWorkspaceFolder(metadata.manifest.workspaceID)
-        await this.uploadJSONFile('manifest.json', metadata.manifest, workspace.id)
-        await this.uploadJSONFile('folders.json', metadata.folders, workspace.id)
-        await this.uploadJSONFile('documents-manifest.json', metadata.documents, workspace.id)
+    public async uploadData(metadata: SyncData): Promise<void> {
+        const workspaceFolder = await this.getWorkspaceFolder(metadata.workspace.id)
+        await this.uploadJSONFile('workspace.json', metadata.workspace, workspaceFolder.id)
+        await this.uploadJSONFile('folders.json', metadata.folders, workspaceFolder.id)
+        await this.uploadJSONFile('documents.json', metadata.documents, workspaceFolder.id)
     }
     
     public async downloadMarkdown(workspaceID: string, documentID: string): Promise<string> {

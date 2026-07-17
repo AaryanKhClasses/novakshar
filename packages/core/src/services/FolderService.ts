@@ -81,6 +81,12 @@ export class FolderService {
         }, folder.id))
     }
 
+    public async import(folder: Folder): Promise<void> {
+        const exists = await this.folderStore.get(folder.id)
+        if(!exists) await this.folderFileStore.create(folder)
+        await this.folderStore.save(folder)
+    }
+
     private async getFolderOrThrow(folderID: string): Promise<Folder> {
         const folder = await this.folderStore.get(folderID)
         if(!folder) throw new FolderError('Folder not found', 'FOLDER_NOT_FOUND')

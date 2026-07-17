@@ -1,4 +1,4 @@
-import { ConflictResolver, ISyncProvider, SyncMetadata, SyncResult } from '../index.js'
+import { ConflictResolver, ISyncProvider, SyncData, SyncResult } from '../index.js'
 
 export class SyncManager {
     constructor(
@@ -6,34 +6,28 @@ export class SyncManager {
         private readonly resolver: ConflictResolver
     ) { }
 
-    public async sync(metadata: SyncMetadata, markdown: Map<string, string>): Promise<SyncResult> {
-        const remoteMetadata = await this.provider.downloadMetadata(metadata.manifest.workspaceID)
-        const synchronizedMetadata: SyncMetadata = {
-            manifest: metadata.manifest,
+    public async sync(data: SyncData, markdown: Map<string, string>): Promise<SyncResult> {
+        const remoteData = await this.provider.downloadData(data.workspace.id)
+        const synchronizedData: SyncData = {
+            workspace: data.workspace,
             folders: [],
             documents: [],
         }
         const synchronizedMarkdown = new Map<string, string>()
-        const createdDocuments: string[] = []
-        const updatedDocuments: string[] = []
-        const deletedDocuments: string[] = []
 
-        this.synchronizeFolders(metadata, remoteMetadata, synchronizedMetadata)
-        let hadConflicts = await this.synchronizeDocuments(metadata, remoteMetadata, synchronizedMetadata, markdown, synchronizedMarkdown, createdDocuments, updatedDocuments, deletedDocuments, metadata.manifest.workspaceID)
-        this.synchronizeManifest(metadata, remoteMetadata, synchronizedMetadata)
-        await this.uploadSynchronizedData(synchronizedMetadata, synchronizedMarkdown)
+        this.synchronizeFolders(data, remoteData, synchronizedData)
+        let hadConflicts = await this.synchronizeDocuments(data, remoteData, synchronizedData, markdown, synchronizedMarkdown, data.workspace.id)
+        this.synchronizeWorkspace(data, remoteData, synchronizedData)
+        await this.uploadSynchronizedData(synchronizedData, synchronizedMarkdown)
 
         return {
-            metadata: synchronizedMetadata,
+            data: synchronizedData,
             markdown: synchronizedMarkdown,
-            createdDocuments,
-            updatedDocuments,
-            deletedDocuments,
             hadConflicts
         }
     }
 
-    private synchronizeFolders(local: SyncMetadata, remote: SyncMetadata, synchronized: SyncMetadata): void {
+    private synchronizeFolders(local: SyncData, remote: SyncData, synchronized: SyncData): void {
         const localFolders = new Map(local.folders.map(folder => [folder.id, folder]))
         const remoteFolders = new Map(remote.folders.map(folder => [folder.id, folder]))
 
@@ -75,7 +69,7 @@ export class SyncManager {
         }
     }
 
-    private async synchronizeDocuments(local: SyncMetadata, remote: SyncMetadata, synchronized: SyncMetadata, localMarkdown: Map<string, string>, synchronizedMarkdown: Map<string, string>, createdDocuments: string[], updatedDocuments: string[], deletedDocuments: string[], workspaceID: string): Promise<boolean> {
+    private async synchronizeDocuments(local: SyncData, remote: SyncData, synchronized: SyncData, localMarkdown: Map<string, string>, synchronizedMarkdown: Map<string, string>, workspaceID: string): Promise<boolean> {
         const localDocuments = new Map(local.documents.map(doc => [doc.id, doc]))
         const remoteDocuments = new Map(remote.documents.map(doc => [doc.id, doc]))
 
@@ -95,7 +89,6 @@ export class SyncManager {
             if(!localDocument && remoteDocument) {
                 synchronized.documents.push(remoteDocument)
                 synchronizedMarkdown.set(documentID, await this.provider.downloadMarkdown(workspaceID, documentID))
-                createdDocuments.push(documentID)
                 continue
             }
 
@@ -103,20 +96,17 @@ export class SyncManager {
 
             if(localDocument.deletedAt && !remoteDocument.deletedAt) {
                 synchronized.documents.push(localDocument)
-                deletedDocuments.push(documentID)
                 continue
             }
 
             if(!localDocument.deletedAt && remoteDocument.deletedAt) {
                 synchronized.documents.push(remoteDocument)
-                deletedDocuments.push(documentID)
                 continue
             }
 
             if(localDocument.deletedAt && remoteDocument.deletedAt) {
                 if(localDocument.deletedAt >= remoteDocument.deletedAt) synchronized.documents.push(localDocument)
                 else synchronized.documents.push(remoteDocument)
-                deletedDocuments.push(documentID)
                 continue
             }
 
@@ -130,7 +120,6 @@ export class SyncManager {
             if(localDocument.updatedAt < remoteDocument.updatedAt) {
                 synchronized.documents.push(remoteDocument)
                 synchronizedMarkdown.set(documentID, await this.provider.downloadMarkdown(workspaceID, documentID))
-                updatedDocuments.push(documentID)
                 continue
             }
 
@@ -145,14 +134,14 @@ export class SyncManager {
         return hadConflicts
     }
 
-    private synchronizeManifest(local: SyncMetadata, remote: SyncMetadata, synchronized: SyncMetadata): void {
-        if(local.manifest.lastModifiedAt >= remote.manifest.lastModifiedAt) synchronized.manifest = local.manifest
-        else synchronized.manifest = remote.manifest
+    private synchronizeWorkspace(local: SyncData, remote: SyncData, synchronized: SyncData): void {
+        if(local.workspace.updatedAt >= remote.workspace.updatedAt) synchronized.workspace = local.workspace
+        else synchronized.workspace = remote.workspace
     }
 
-    private async uploadSynchronizedData(metadata: SyncMetadata, markdown: Map<string, string>): Promise<void> {
-        await this.provider.uploadMetadata(metadata)
+    private async uploadSynchronizedData(data: SyncData, markdown: Map<string, string>): Promise<void> {
+        await this.provider.uploadData(data)
         for(const [documentID, content] of markdown)
-            await this.provider.uploadMarkdown(metadata.manifest.workspaceID, documentID, content)
+            await this.provider.uploadMarkdown(data.workspace.id, documentID, content)
     }
 }

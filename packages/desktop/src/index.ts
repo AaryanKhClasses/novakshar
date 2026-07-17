@@ -12,6 +12,8 @@ export { SQLiteContext } from './persistence/sqlite/SQLiteContext.js'
 export { SQLiteDatabase } from './persistence/sqlite/SQLiteDatabase.js'
 export { SQLiteMigrationRunner } from './persistence/sqlite/SQLiteMigrationRunner.js'
 
+export { SyncService } from './services/SyncService.js'
+
 export { WorkspaceInitializer } from './workspace/WorkspaceInitializer.js'
 export { WorkspaceFileStore } from './workspace/WorkspaceFileStore.js'
 export { WorkspaceValidator } from './workspace/WorkspaceValidator.js'

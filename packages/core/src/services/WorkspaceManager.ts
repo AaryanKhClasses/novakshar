@@ -53,4 +53,8 @@ export class WorkspaceManager {
             occuredAt: context.timestamp
         }, workspace.id))
     }
+
+    public async import(context: OperationContext, workspace: Workspace): Promise<void> {
+        await this.workspaceStore.save(workspace)
+    }
 }
