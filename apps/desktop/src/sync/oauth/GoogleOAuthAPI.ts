@@ -1,8 +1,8 @@
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
-const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo'
+const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v2/userinfo'
 
-const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file'
+const GOOGLE_SCOPE = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/userinfo.email'].join(' ')
 const REDIRECT_URI = 'http://localhost:42813'
 
 export function getAuthorizationUrl(clientID: string): string {

@@ -42,6 +42,11 @@ declare global {
                 confirmClose(title: string): Promise<'save' | 'discard' | 'cancel'>
                 saveSession(session: any): Promise<void>
                 loadSession(): Promise<any>
+            },
+            sync: {
+                getState(): Promise<{ enabled: boolean, email: string | null }>
+                toggle(): Promise<void>
+                syncNow(): Promise<void>
             }
         }
     }

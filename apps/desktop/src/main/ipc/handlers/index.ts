@@ -1,4 +1,5 @@
 export * from './editor'
 export * from './explorer'
+export * from './sync'
 export * from './window'
 export * from './workspace'

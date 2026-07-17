@@ -97,5 +97,16 @@ export const api = {
         loadSession(): Promise<any> {
             return ipcRenderer.invoke(IPCChannels.editor.loadSession)
         }
+    },
+    sync: {
+        getState(): Promise<{ enabled: boolean, email: string | null}> {
+            return ipcRenderer.invoke(IPCChannels.sync.getState)
+        },
+        toggle(): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.sync.toggle)
+        },
+        syncNow(): Promise<void> {
+            return ipcRenderer.invoke(IPCChannels.sync.syncNow)
+        }
     }
 }

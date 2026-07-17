@@ -2,7 +2,7 @@ import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { ApplicationHost } from './ApplicationHost'
 import { createWindow } from './createMainWindow'
-import { registerEditorIPC, registerExplorerIPC, registerWindowIPC, registerWorkspaceIPC } from './ipc'
+import { registerEditorIPC, registerExplorerIPC, registerSyncIPC, registerWindowIPC, registerWorkspaceIPC } from './ipc'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore, WindowStateManager } from './state'
 
@@ -25,6 +25,7 @@ app.whenReady().then(async() => {
     registerWorkspaceIPC(host)
     registerExplorerIPC(host)
     registerEditorIPC(host)
+    registerSyncIPC(host)
     await host.restoreWorkspace()
 
     app.on('activate', function () {

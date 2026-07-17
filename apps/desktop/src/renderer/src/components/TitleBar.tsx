@@ -17,7 +17,10 @@ interface MenuDefinition {
     items: MenuItem[]
 }
 
-type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'find' | 'replace' | 'toggleZenMode' | 'toggleFocusMode'
+type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' |
+    'find' | 'replace' |
+    'toggleZenMode' | 'toggleFocusMode' |
+    'toggleSync' | 'syncNow'
 
 interface MenuItemDefinition {
     label: string
@@ -71,6 +74,13 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
             { label: 'Toggle Zen Mode', shortcut: 'Ctrl+Alt+Z', action: 'toggleZenMode' },
             { label: 'Toggle Focus Mode', shortcut: 'Ctrl+Alt+F', action: 'toggleFocusMode' }
         ]
+    },
+    {
+        title: 'Sync',
+        items: [
+            { label: await window.novakshar.sync.getState().then(state => state.enabled ? 'Disable Sync' : 'Enable Sync'), action: 'toggleSync' },
+            { label: 'Sync Now', action: 'syncNow' }
+        ]
     }
 ]
 
@@ -115,7 +125,9 @@ export function TitleBar() {
             replace: () => toggleOverlay(OverlayType.Find, true),
             quickOpenDocument: () => toggleOverlay(OverlayType.QuickOpen),
             toggleZenMode,
-            toggleFocusMode
+            toggleFocusMode,
+            toggleSync: async() => await window.novakshar.sync.toggle(),
+            syncNow: async() => await window.novakshar.sync.syncNow()
         }
 
         return MENU_DEFINITIONS.map(menu => ({

@@ -1,4 +1,4 @@
-import { DesktopBootstrap, WorkspaceSession } from '@novakshar/desktop'
+import { DesktopBootstrap, SyncService, WorkspaceSession } from '@novakshar/desktop'
 import { DocumentInfo } from '@shared/document'
 import { EditorSessionState, OpenDocumentInfo } from '@shared/editor'
 import { FolderInfo } from '@shared/folder'
@@ -6,10 +6,16 @@ import { WorkspaceInfo } from '@shared/workspace'
 import { BrowserWindow } from 'electron'
 import { NativeDialogService } from './services'
 import { ApplicationStateStore } from './state'
+import { GoogleOAuthService } from '../sync/oauth/GoogleOAuthService'
+import { ConflictResolver, GoogleDriveProvider } from '@novakshar/sync'
 
 export class ApplicationHost {
     private readonly bootstrap = new DesktopBootstrap()
     private session: WorkspaceSession | null = null
+
+    // ! NOTE TO REMOVE BEFORE PUSHING
+    private readonly GOOGLE_OAUTH_CLIENT_ID = ""
+    private readonly GOOGLE_OAUTH_CLIENT_SECRET = ""
 
     constructor(
         private readonly dialog: NativeDialogService,
@@ -47,6 +53,7 @@ export class ApplicationHost {
         await this.closeWorkspace()
         this.session = await this.bootstrap.createWorkspace(path, name)
         await this.saveState(path)
+        await this.syncIfEnabled()
         return { name, path }
     }
 
@@ -58,6 +65,7 @@ export class ApplicationHost {
 
     public async restoreWorkspace(): Promise<WorkspaceInfo | null> {
         const state = await this.state.load()
+        await this.syncIfEnabled()
         if(!state.lastWorkspace) return null
         try {
             return await this.openWorkspaceAt(state.lastWorkspace)
@@ -96,6 +104,7 @@ export class ApplicationHost {
 
     public async closeWorkspace(): Promise<void> {
         if(!this.session) return
+        await this.syncIfEnabled()
         await this.session.dispose()
         this.session = null
     }
@@ -248,10 +257,54 @@ export class ApplicationHost {
         return state.editor
     }
 
+    public async getSyncState(): Promise<{ enabled: boolean, email: string | null}> {
+        const state = await this.state.load()
+        return {
+            enabled: state.sync.enabled,
+            email: state.sync.email
+        }
+    }
+
+    public async enableSync(): Promise<void> {
+        const account = await new GoogleOAuthService(this.GOOGLE_OAUTH_CLIENT_ID, this.GOOGLE_OAUTH_CLIENT_SECRET).connect()
+        const state = await this.state.load()
+        state.sync.enabled = true
+        state.sync.email = account.email
+        state.sync.refreshToken = account.refreshToken
+        await this.state.save(state)
+        if(this.session) await this.syncNow()
+    }
+
+    public async disableSync(): Promise<void> {
+        const state = await this.state.load()
+        state.sync.enabled = false
+        state.sync.email = null
+        state.sync.refreshToken = null
+        await this.state.save(state)
+    }
+
+    public async syncNow(): Promise<void> {
+        if(!this.session) return
+        const state = await this.state.load()
+        if(!state.sync.enabled || !state.sync.refreshToken) return
+        const accessToken = await new GoogleOAuthService(this.GOOGLE_OAUTH_CLIENT_ID, this.GOOGLE_OAUTH_CLIENT_SECRET).getAccessToken(state.sync.refreshToken)
+        const provider = new GoogleDriveProvider(accessToken)
+        const resolver = new ConflictResolver()
+        const service = new SyncService(provider, resolver)
+        await service.sync(this.session)
+    }
+
+    public async toggleSync(): Promise<void> {
+        const state = await this.state.load()
+        if(state.sync.enabled) await this.disableSync()
+        else await this.enableSync()
+    }
+
     private async openWorkspaceAt(path: string): Promise<WorkspaceInfo> {
         await this.closeWorkspace()
         this.session = await this.bootstrap.openWorkspace(path)
         await this.saveState(path)
+        await this.syncIfEnabled()
         return {
             name: this.session.workspace.name,
             path
@@ -265,5 +318,14 @@ export class ApplicationHost {
         state.recentWorkspaces.unshift(path)
         if(state.recentWorkspaces.length > 10) state.recentWorkspaces = state.recentWorkspaces.slice(0, 10)
         await this.state.save(state)
+    }
+
+    private async shouldSync(): Promise<boolean> {
+        const state = await this.state.load()
+        return (state.sync.enabled && state.sync.refreshToken !== null)
+    }
+
+    private async syncIfEnabled(): Promise<void> {
+        if(await this.shouldSync()) await this.syncNow()
     }
 }

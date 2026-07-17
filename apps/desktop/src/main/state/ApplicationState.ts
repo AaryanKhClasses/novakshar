@@ -12,6 +12,11 @@ export interface ApplicationState {
         height: number
         maximized: boolean
     }
+    sync: {
+        enabled: boolean
+        email: string | null
+        refreshToken: string | null
+    }
 }
 
 export const DefaultApplicationState: ApplicationState = {
@@ -28,5 +33,10 @@ export const DefaultApplicationState: ApplicationState = {
         width: 1600,
         height: 900,
         maximized: false
+    },
+    sync: {
+        enabled: false,
+        email: null,
+        refreshToken: null
     }
 }

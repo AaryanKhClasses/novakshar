@@ -34,5 +34,10 @@ export const IPCChannels = {
         confirmClose: 'editor:confirmClose',
         saveSession: 'editor:saveSession',
         loadSession: 'editor:loadSession'
+    },
+    sync: {
+        getState: 'sync:getState',
+        toggle: 'sync:toggle',
+        syncNow: 'sync:syncNow'
     }
 }
