@@ -1,0 +1,22 @@
+{
+    "name": "@novakshar/mobile",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch"
+    },
+    "devDependencies": {
+        "@types/node": "^26.0.1",
+        "typescript": "^6.0.3"
+    },
+    "dependencies": {
+        "@op-engineering/op-sqlite": "^17.1.2",
+        "react-native-fs": "^2.20.0"
+    }
+}
