@@ -31,7 +31,7 @@ export class SyncService {
         const markdownMap = new Map<string, string>()
         for(const document of documents) {
             const markdown = await session.readDocument(document.id)
-            markdownMap.set(document.id, markdown)
+            markdownMap.set(document.id, markdown.markdown)
         }
         return markdownMap
     }

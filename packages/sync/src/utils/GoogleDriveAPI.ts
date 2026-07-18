@@ -36,7 +36,7 @@ export async function createFolder(
 export async function findFolder(
     accessToken: string, name: string, parentID?: string
 ): Promise<GoogleDriveResource | null> {
-    const parentQuery = parentID ? ` and '${parentID}' in parents` : ''
+    const parentQuery = parentID ? ` '${parentID}' in parents` : ''
     const query = [
         `mimeType='application/vnd.google-apps.folder'`,
         `name='${name}'`,
@@ -61,17 +61,17 @@ export async function uploadFile(
         parents: parentID ? [parentID] : undefined
     }
 
-    const boundary = `--novakshar-sync-boundary-${Date.now()}`
+    const boundary = `novakshar-sync-boundary-${Date.now()}`
     const body = [
-        boundary,
+        `--${boundary}`,
         'Content-Type: application/json; charset=UTF-8',
         '',
         JSON.stringify(metadata),
-        boundary,
+        `--${boundary}`,
         `Content-Type: ${mimeType}`,
         '',
         content,
-        boundary + '--'
+        `--${boundary}--`
     ].join('\r\n')
 
     const response = await fetch(`${DRIVE_UPLOAD_URL}?uploadType=multipart&fields=id,name,mimeType`, {
@@ -89,7 +89,7 @@ export async function uploadFile(
 export async function findFile(
     accessToken: string, name: string, parentID?: string
 ): Promise<GoogleDriveResource | null> {
-    const parentQuery = parentID ? ` and '${parentID}' in parents` : ''
+    const parentQuery = parentID ? ` '${parentID}' in parents` : ''
     const query = [
         `name='${name}'`,
         parentQuery,

@@ -10,3 +10,4 @@
 - Scroll to View Outline Item in Editor.
 - **TO FIX** Renaming in Explorer doesnt update Opened Tab Names.
 - **TO CHANGE** Soft Delete Folders (.folder.deletedAt) implementation.
+- **TO FIX** Clicking "Enable Sync" in Title Bar doesn't change text to "Disable Sync" instantly and vice-versa (needs refreshing to update)

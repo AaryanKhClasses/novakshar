@@ -4,7 +4,7 @@ import { useWorkspace } from '@renderer/providers'
 
 export function WelcomeScreen() {
     const { createWorkspace, openWorkspace, recentWorkspaces, openRecentWorkspace, removeRecentWorkspace } = useWorkspace()
-    return <div className="flex flex-col items-center justify-center bg-editor text-text">
+    return <div className="flex flex-col h-full items-center justify-center bg-editor text-text">
         <div className="mb-5 text-center">
             <div className="text-5xl font-bold">Welcome to Novakshar</div>
             <p className="mt-2 text-text-muted">A Fully Customizable Local-First Markdown Editor</p>

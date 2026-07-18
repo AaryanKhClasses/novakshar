@@ -1,4 +1,4 @@
-import { IWorkspaceStore, IEventBus, IClock, IIDGenerator, Workspace, WorkspaceError, WorkspaceCreatedEvent, WorkspaceOpenedEvent, WorkspaceClosedEvent } from '../index.js'
+import { IClock, IEventBus, IIDGenerator, IWorkspaceStore, Workspace, WorkspaceClosedEvent, WorkspaceCreatedEvent, WorkspaceError, WorkspaceOpenedEvent } from '../index.js'
 import { OperationContext } from './OperationContext.js'
 
 export class WorkspaceManager {

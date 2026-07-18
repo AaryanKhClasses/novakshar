@@ -8,6 +8,14 @@ export class SyncManager {
 
     public async sync(data: SyncData, markdown: Map<string, string>): Promise<SyncResult> {
         const remoteData = await this.provider.downloadData(data.workspace.id)
+        if(!remoteData) {
+            await this.provider.uploadData(data)
+            return {
+                data,
+                markdown,
+                hadConflicts: false
+            }
+        }
         const synchronizedData: SyncData = {
             workspace: data.workspace,
             folders: [],
@@ -88,7 +96,9 @@ export class SyncManager {
 
             if(!localDocument && remoteDocument) {
                 synchronized.documents.push(remoteDocument)
-                synchronizedMarkdown.set(documentID, await this.provider.downloadMarkdown(workspaceID, documentID))
+                const md = await this.provider.downloadMarkdown(workspaceID, documentID)
+                if(!md) continue
+                synchronizedMarkdown.set(documentID, md)
                 continue
             }
 
@@ -119,7 +129,10 @@ export class SyncManager {
 
             if(localDocument.updatedAt < remoteDocument.updatedAt) {
                 synchronized.documents.push(remoteDocument)
-                synchronizedMarkdown.set(documentID, await this.provider.downloadMarkdown(workspaceID, documentID))
+                const md = await this.provider.downloadMarkdown(workspaceID, documentID)
+                if(!md) continue
+                synchronizedMarkdown.set(documentID, md)
+                hadConflicts = true
                 continue
             }
 
