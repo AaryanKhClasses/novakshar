@@ -19,7 +19,7 @@ export function getAuthorizationUrl(clientID: string): string {
     return `${GOOGLE_AUTH_URL}?${params.toString()}`
 }
 
-export async function exchangeCodeForTokens(clientID: string, clientSecret: string, code: string): Promise<{ accessToken: string; refreshToken: string }> {
+export async function exchangeCodeForTokens(clientID: string, clientSecret: string, code: string): Promise<{ accessToken: string, refreshToken: string }> {
     const response = await fetch(GOOGLE_TOKEN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
