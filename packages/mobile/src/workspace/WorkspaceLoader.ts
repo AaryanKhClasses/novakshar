@@ -14,7 +14,7 @@ export class WorkspaceLoader {
         const validation = await validator.validate(workspacePath)
         if(!validation.valid) throw new Error(validation.reason)
 
-        const database = new SQLiteDatabase(`${workspacePath}/${Constants.WorkspaceFolder}/${Constants.DatabaseFile}`)
+        const database = new SQLiteDatabase(`${workspacePath}/${Constants.WorkspaceFolder}`, Constants.DatabaseFile)
         const migrationRunner = new SQLiteMigrationRunner(database.context)
         migrationRunner.migrate()
 

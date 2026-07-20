@@ -1,12 +1,12 @@
-import { DB, openV2 } from '@op-engineering/op-sqlite'
+import { DB, open } from '@op-engineering/op-sqlite'
 import { SQLiteContext } from './SQLiteContext.js'
 
 export class SQLiteDatabase {
     private readonly database: DB
     private readonly _context: SQLiteContext
 
-    constructor(path: string) {
-        this.database = openV2({ path })
+    constructor(location: string, name: string) {
+        this.database = open({ name, location })
         this._context = new SQLiteContext(this.database)
     }
 

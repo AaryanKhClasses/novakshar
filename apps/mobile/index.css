@@ -1,1 +1,36 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --bg-editor: #0d1117;
+    --bg-explorer: #161b22;
+    --bg-tab: #161b22;
+    --bg-title-bar: #161b22;
+    --bg-tool-bar: #161b22;
+    --bg-status-bar: #161b22;
+    --bg-overlay: rgba(0,0,0,0.6);
+
+    --bg-explorer-selected: #21262d;
+    --bg-explorer-hover: #1c2128;
+    --bg-tab-selected: #21262d;
+    --bg-tab-hover: #1c2128;
+    --bg-editor-toolbar: #21262d;
+    --bg-title-hover: #1c2128;
+
+    --text: #e6edf3;
+    --text-alt: #8b949e;
+    --text-muted: #6e7681;
+    --text-inverted: #0d1117;
+
+    --border: #30363d;
+    --border-alt: #21262d;
+    --border-focus: #58a6ff;
+
+    --primary: #58a6ff;
+    --secondary: #1f6feb;
+    --success: #3fb950;
+    --warning: #d29922;
+    --danger: #f85149;
+    --info: #39c5cf;
+}
