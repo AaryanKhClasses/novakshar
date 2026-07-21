@@ -14,6 +14,8 @@ const config = {
         nodeModulesPaths: [path.resolve(__dirname, '..', '..', 'node_modules'), path.resolve(__dirname, 'node_modules')],
         extraNodeModules: {
             'react': path.resolve(__dirname, '..', '..', 'node_modules', 'react'),
+            'react/jsx-runtime': path.resolve(__dirname, '..', '..', 'node_modules', 'react', 'jsx-runtime.js'),
+            'react/jsx-dev-runtime': path.resolve(__dirname, '..', '..', 'node_modules', 'react', 'jsx-dev-runtime.js'),
             'react-native': path.resolve(__dirname, '..', '..', 'node_modules', 'react-native'),
             '@babel/runtime': path.resolve(__dirname, '..', '..', 'node_modules', '@babel', 'runtime'),
             // '@novakshar/core': path.resolve(__dirname, 'packages', 'core'),
