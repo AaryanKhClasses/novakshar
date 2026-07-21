@@ -17,7 +17,7 @@ interface MenuDefinition {
     items: MenuItem[]
 }
 
-type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' |
+type MenuActionKey = 'createWorkspace' | 'openWorkspace' | 'createDocument' | 'quickOpenDocument' | 'saveDocument' | 'closeDocument' | 'closeWindow' | 'closeWorkspace' |
     'find' | 'replace' |
     'toggleZenMode' | 'toggleFocusMode' |
     'toggleSync' | 'syncNow'
@@ -48,6 +48,7 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
             { label: 'Save As', shortcut: 'Ctrl+Shift+S', enabled: false },
             { separator: true, label: '' },
             { label: 'Close Document', shortcut: 'Ctrl+W', action: 'closeDocument' },
+            { label: 'Close Workspace', action: 'closeWorkspace' },
             { label: 'Quit', shortcut: 'Alt+F4', action: 'closeWindow' },
             { separator: true, label: '' },
             { label: 'Settings', shortcut: 'Ctrl+,', enabled: false }
@@ -85,7 +86,7 @@ const MENU_DEFINITIONS: MenuDefinitionTemplate[] = [
 ]
 
 export function TitleBar() {
-    const { workspaceName, createWorkspace, openWorkspace } = useWorkspace()
+    const { workspaceName, createWorkspace, openWorkspace, closeWorkspace } = useWorkspace()
     const { saveDocument, closeDocument, activeDocumentID } = useEditor()
     const { createDocument } = useExplorer()
     const { toggleOverlay } = useOverlay()
@@ -117,6 +118,7 @@ export function TitleBar() {
         const actions: Record<MenuActionKey, () => unknown> = {
             createWorkspace,
             openWorkspace,
+            closeWorkspace,
             createDocument,
             saveDocument,
             closeDocument: () => void closeDocument(activeDocumentID ?? ''),

@@ -1,6 +1,7 @@
 import { Constants } from '@novakshar/core'
-import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, type PropsWithChildren } from 'react'
 import RNFS from 'react-native-fs'
+import { ApplicationState, ApplicationStore, DefaultApplicationState } from '../store'
 
 export interface WorkspaceDTO {
     name: string
@@ -9,12 +10,16 @@ export interface WorkspaceDTO {
 
 export interface ApplicationContextValue {
     workspaces: WorkspaceDTO[]
+    state: ApplicationState
+    save(state: ApplicationState): Promise<void>
 }
 
 export const ApplicationContext = createContext<ApplicationContextValue | null>(null)
 
 export function ApplicationProvider({ children }: PropsWithChildren) {
+    const store = useRef(new ApplicationStore())
     const [workspaces, setWorkspaces] = useState<WorkspaceDTO[]>([])
+    const [state, setState] = useState<ApplicationState>(DefaultApplicationState)
 
     useEffect(() => {
         const fetchWorkspaces = async() => {
@@ -41,8 +46,19 @@ export function ApplicationProvider({ children }: PropsWithChildren) {
         fetchWorkspaces()
     }, [])
 
+    useEffect(() => {
+        (async() => setState(await store.current.load()))()
+    }, [])
+
+    const save = async(newState: ApplicationState) => {
+        await store.current.save(newState)
+        setState(newState)
+    }
+
     const value: ApplicationContextValue = {
-        workspaces
+        workspaces,
+        state,
+        save
     }
 
     return <ApplicationContext.Provider value={value}>{children}</ApplicationContext.Provider>

@@ -1,6 +1,7 @@
 import { MobileBootstrap, WorkspaceSession } from '@novakshar/mobile'
-import { createContext, PropsWithChildren, useContext, useRef, useState } from 'react'
+import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
 import RNFS from 'react-native-fs'
+import { useApplication } from '.'
 
 export interface WorkspaceContextValue {
     isOpen: boolean
@@ -19,6 +20,7 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
     const [workspaceName, setWorkspaceName] = useState<string | null>(null)
     const [workspacePath, setWorkspacePath] = useState<string | null>(null)
     const [session, setSession] = useState<WorkspaceSession | null>(null)
+    const application = useApplication()
 
     const createWorkspace = async(name: string) => {
         const path = `${RNFS.DocumentDirectoryPath}/workspaces/` + name.replaceAll(' ', '-')
@@ -26,6 +28,10 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
         setSession(session)
         setWorkspaceName(name)
         setWorkspacePath(path)
+        await application.save({
+            ...application.state,
+            lastWorkspacePath: path
+        })
     }
 
     const openWorkspace = async(path: string) => {
@@ -33,6 +39,10 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
         setSession(session)
         setWorkspaceName(session.workspace.name)
         setWorkspacePath(path)
+        await application.save({
+            ...application.state,
+            lastWorkspacePath: path
+        })
     }
 
     const closeWorkspace = async() => {
@@ -40,7 +50,15 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
         setSession(null)
         setWorkspaceName(null)
         setWorkspacePath(null)
+        await application.save({
+            ...application.state,
+            lastWorkspacePath: null
+        })
     }
+
+    useEffect(() => {
+        if(application.state.lastWorkspacePath) openWorkspace(application.state.lastWorkspacePath)
+    }, [application.state.lastWorkspacePath])
 
     const value: WorkspaceContextValue = {
         isOpen: workspaceName !== null && workspacePath !== null,

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
-import { useApplication, useWorkspace, WorkspaceDTO } from '../providers'
-import { Modal } from './Modal'
+import { useApplication, useWorkspace, WorkspaceDTO } from '../../providers'
+import { Modal } from '../../components'
 
 export function WelcomeScreen() {
     const { createWorkspace, openWorkspace } = useWorkspace()
@@ -32,7 +32,7 @@ export function WelcomeScreen() {
                 </Pressable>)}
         </View>
         <Modal visible={showCreateModal} title="Create Workspace" onClose={() => setShowCreateModal(false)}>
-            <TextInput placeholder="Workspace Name" value={workspaceName} onChangeText={setWorkspaceName} className="border border-border rounded-lg p-2 text-text placeholder:text-text" />
+            <TextInput placeholder="Workspace Name" value={workspaceName} onChangeText={setWorkspaceName} className="border border-border rounded-lg p-2 text-text placeholder:text-text!" />
             <View className="mt-2 flex-row items-center justify-center gap-2">
                 <Pressable onPress={() => setShowCreateModal(false)} className="mt-4 w-1/2 items-center px-4 py-2 rounded-xl bg-editor-toolbar border border-border">
                     <Text className="text-text">Cancel</Text>

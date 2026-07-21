@@ -1,11 +1,8 @@
 import { View } from 'react-native'
-import { WelcomeScreen } from '../components'
-import { useWorkspace } from '../providers'
+import { WorkspaceContent } from '../features'
 
 export function AppFrame() {
-    const { isOpen } = useWorkspace()
-
     return <View>
-        {!isOpen && <WelcomeScreen />}
+        <WorkspaceContent />
     </View>
 }
