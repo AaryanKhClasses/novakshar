@@ -55,15 +55,15 @@ export class SQLiteDocumentStore implements IDocumentStore {
     }
 
     private toRow(document: Document): Scalar<DocumentRow> {
-        return {
-            id: document.id,
-            folder_id: document.folderID ?? null,
-            title: document.title,
-            relative_path: document.relativePath,
-            favorite: document.favorite ? 1 : 0,
-            deleted: document.deleted ? 1 : 0,
-            created_at: document.createdAt.toISOString(),
-            updated_at: document.updatedAt.toISOString()
-        }
+        return [
+            document.id,
+            document.folderID ?? null,
+            document.title,
+            document.relativePath,
+            document.favorite ? 1 : 0,
+            document.deleted ? 1 : 0,
+            document.createdAt.toISOString(),
+            document.updatedAt.toISOString()
+        ]
     }
 }

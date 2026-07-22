@@ -56,14 +56,14 @@ export class SQLiteFolderStore implements IFolderStore {
     }
 
     private toRow(folder: Folder): Scalar<FolderRow> {
-        return {
-            id: folder.id,
-            parent_id: folder.parentID ?? null,
-            name: folder.name,
-            color: folder.color ?? null,
-            icon: folder.icon ?? null,
-            created_at: folder.createdAt.toISOString(),
-            updated_at: folder.updatedAt.toISOString()
-        }
+        return [
+            folder.id,
+            folder.parentID ?? null,
+            folder.name,
+            folder.color ?? null,
+            folder.icon ?? null,
+            folder.createdAt.toISOString(),
+            folder.updatedAt.toISOString()
+        ]
     }
 }

@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import { useApplication, useWorkspace, WorkspaceDTO } from '../../providers'
 import { Modal } from '../../components'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons'
 
 export function WelcomeScreen() {
     const { createWorkspace, openWorkspace } = useWorkspace()
@@ -22,17 +24,24 @@ export function WelcomeScreen() {
         <Pressable onPress={() => setShowCreateModal(true)} className="w-full items-center mt-5 px-4 py-2 rounded-xl bg-editor-toolbar border border-border">
             <Text className="text-text">Create Workspace</Text>
         </Pressable>
-        <View className="w-full my-4 h-px bg-border" />
+        <View className="flex flex-row items-center justify-center gap-2 w-full my-4">
+            <View className="w-[30%] h-px bg-border" />
+            <Text className="text-text-alt text-center">EXISTING</Text>
+            <View className="w-[30%] h-px bg-border" />
+        </View>
         <View className="w-full text-start">
-            <Text className="text-text">Existing Workspaces:</Text>
             {workspaces.length === 0
-                ? <Text className="text-text-muted">No workspaces found.</Text>
-                : workspaces.map((workspace: WorkspaceDTO) => <Pressable onPress={() => openWorkspace(workspace.path)} key={workspace.name} className="p-2 w-full bg-editor-toolbar border border-border rounded-lg mt-2">
+                ? <Text className="text-center text-text-muted">No workspaces found.</Text>
+                : workspaces.map((workspace: WorkspaceDTO) => <Pressable onPress={() => openWorkspace(workspace.path)}
+                    key={workspace.name}
+                    className="p-2 w-full bg-editor-toolbar border border-border rounded-lg mt-2 flex flex-row items-center gap-4"
+                >
+                    <FontAwesomeIcon color="#8b949e" icon={faFolderOpen} />
                     <Text className="text-text">{workspace.name}</Text>
                 </Pressable>)}
         </View>
         <Modal visible={showCreateModal} title="Create Workspace" onClose={() => setShowCreateModal(false)}>
-            <TextInput placeholder="Workspace Name" value={workspaceName} onChangeText={setWorkspaceName} className="border border-border rounded-lg p-2 text-text placeholder:text-text!" />
+            <TextInput placeholder="Workspace Name" value={workspaceName} onChangeText={setWorkspaceName} className="border border-border focus:border-border-focus rounded-lg p-2 text-text placeholder:text-text" />
             <View className="mt-2 flex-row items-center justify-center gap-2">
                 <Pressable onPress={() => setShowCreateModal(false)} className="mt-4 w-1/2 items-center px-4 py-2 rounded-xl bg-editor-toolbar border border-border">
                     <Text className="text-text">Cancel</Text>
