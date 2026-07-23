@@ -3,7 +3,7 @@ import { AppFrame } from './src/layouts/AppFrame'
 import { ApplicationProvider, WorkspaceProvider } from './src/providers'
 
 export default function App() {
-    return <SafeAreaView className="flex-1 items-center justify-center bg-editor">
+    return <SafeAreaView className="flex-1 bg-editor">
         <ApplicationProvider>
             <WorkspaceProvider>
                 <AppFrame />

@@ -1,7 +1,6 @@
 import { View } from 'react-native'
+import { DocumentNode, FolderNode } from '..'
 import { DocumentInfo, FolderInfo } from '../../types'
-import { DocumentNode } from './DocumentNode'
-import { FolderNode } from './FolderNode'
 
 export function ExplorerTree({ folders, documents }: { folders: FolderInfo[], documents: DocumentInfo[] }) {
     const roots = folders.filter(f => f.parentID === null)

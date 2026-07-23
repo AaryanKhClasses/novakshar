@@ -2,7 +2,7 @@ import { View } from 'react-native'
 import { WorkspaceContent } from '../features'
 
 export function AppFrame() {
-    return <View>
+    return <View className="flex-1">
         <WorkspaceContent />
     </View>
 }

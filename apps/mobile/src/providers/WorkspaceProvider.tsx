@@ -13,6 +13,7 @@ export interface WorkspaceContextValue {
     documents: DocumentInfo[]
     selectedFolderID: string | null
     selectedDocumentID: string | null
+    workspaceView: 'explorer' | 'editor'
     refreshExplorer: () => Promise<void>
     createWorkspace: (name: string) => Promise<void>
     openWorkspace: (path: string) => Promise<void>
@@ -25,6 +26,9 @@ export interface WorkspaceContextValue {
     deleteDocument: (documentID: string) => Promise<void>
     selectFolder: (folderID: string | null) => void
     selectDocument: (documentID: string | null) => void
+    openDocument: (documentID: string) => Promise<void>
+    showExplorer: () => void
+    hideExplorer: () => void
 }
 
 export const WorkspaceContext = createContext<WorkspaceContextValue | null>(null)
@@ -40,6 +44,7 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
     const [documents, setDocuments] = useState<DocumentInfo[]>([])
     const [selectedFolderID, setSelectedFolderID] = useState<string | null>(null)
     const [selectedDocumentID, setSelectedDocumentID] = useState<string | null>(null)
+    const [workspaceView, setWorkspaceView] = useState<'explorer' | 'editor'>('explorer')
 
     const createWorkspace = async(name: string) => {
         const path = `${RNFS.DocumentDirectoryPath}/workspaces/` + name.replaceAll(' ', '-')
@@ -159,6 +164,18 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
         setSelectedFolderID(null)
     }
 
+    const openDocument = async(documentID: string) => {
+        if(!session) return
+        const document = await session.documentService.get(documentID)
+        if(!document) return
+        setSelectedDocumentID(documentID)
+        setSelectedFolderID(null)
+        setWorkspaceView('editor')
+    }
+
+    const showExplorer = () => setWorkspaceView('explorer')
+    const hideExplorer = () => setWorkspaceView('editor')
+
     useEffect(() => {
         if(application.state.lastWorkspacePath) openWorkspace(application.state.lastWorkspacePath)
     }, [application.state.lastWorkspacePath])
@@ -176,6 +193,7 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
         documents,
         selectedFolderID,
         selectedDocumentID,
+        workspaceView,
         refreshExplorer,
         createWorkspace,
         openWorkspace,
@@ -187,7 +205,10 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
         deleteFolder,
         deleteDocument,
         selectFolder,
-        selectDocument
+        selectDocument,
+        openDocument,
+        showExplorer,
+        hideExplorer
     }
 
     return <WorkspaceContext.Provider value={value}>
